@@ -1,0 +1,23 @@
+{
+  "name": "api-jwt",
+  "version": "1.0.0",
+  "description": "API JWT GRAPHQL",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^3.13.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "graphql": "^15.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "merge-graphql-schemas": "^1.7.8",
+    "nodemon": "^3.1.0",
+    "pg": "^8.11.5",
+    "pg-promise": "^11.6.0"
+  }
+}
