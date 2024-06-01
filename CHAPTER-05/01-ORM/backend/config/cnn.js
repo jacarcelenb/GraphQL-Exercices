@@ -1,7 +1,7 @@
-import Sequelize from "sequelize";
-import vars from "./env-vars.js"
+const Sequelize = require("sequelize") ;
+const vars = require( "./env-vars")
 
-export const sequelize = new Sequelize(
+const sequelize = new Sequelize(
   vars.DATABASE_NAME,
   vars.USER,
   vars.PASSWORD,
@@ -10,3 +10,4 @@ export const sequelize = new Sequelize(
     dialect: vars.DIALECT,
   }
 );
+module.exports = sequelize

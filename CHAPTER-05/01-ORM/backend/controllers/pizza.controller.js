@@ -1,16 +1,27 @@
-const { db } = require("../config/cnn");
+const Pizza = require("../models/pizza");
+const Ingredient = require("../models/ingredient");
 
 const pizzaResolver = {
   Query: {
-    pizzas(root, { id }) {
-      if (id == undefined) {
-        return db.any("SELECT * FROM pizzas;");
+    async pizzas(root, { piz_id }) {
+      if (piz_id == undefined) {
+        return await Pizza.findAll();
       } else {
-        return db.any("SELECT * FROM pizzas WHERE piz_id=$1;", [id]);
+        const pizza = await Pizza.findOne({
+          where: { piz_id },
+        });
+        return [pizza.dataValues];
       }
     },
-    ingredients(root, { id }) {
-      return db.any("SELECT * FROM ingredients;");
+    async ingredients(root, { ing_id }) {
+      if (ing_id == undefined) {
+        return await Ingredient.findAll();
+      } else {
+        const ingredient = await Ingredient.findOne({
+          where: { ing_id },
+        });
+        return [ingredient.dataValues];
+      }
     },
   },
   Mutation: {
@@ -125,7 +136,12 @@ const pizzaResolver = {
           const updateingredient = await db.one(
             `UPDATE ingredients SET ing_name=$2, ing_calories=$3, ing_state=$4
                                 WHERE ing_id=$1 returning *;`,
-            [ingredient.ing_id, ingredient.ing_name, ingredient.ing_calories, ingredient.ing_state]
+            [
+              ingredient.ing_id,
+              ingredient.ing_name,
+              ingredient.ing_calories,
+              ingredient.ing_state,
+            ]
           );
           return updateingredient;
         }

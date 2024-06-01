@@ -1,8 +1,24 @@
-import { sequelize } from "../config/cnn.js";
+const sequelize = require("../config/cnn")
+const {ApolloServer} = require("apollo-server")
+const {fileLoader, mergeTypes} = require("merge-graphql-schemas")
 
-try {
-  await sequelize.authenticate();
-  console.log("Connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
+// Conexión a la BDD
+sequelize.authenticate().then(() =>{
+  console.log("Estas conectado a la BD")
+});;
+
+// Sincronización de los modelos con la BDD
+//sequelize.sync()
+
+const typeDefs = mergeTypes(fileLoader('./type-system/schema.graphql'))
+const resolvers = require("../controllers/pizza.controller")
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+})
+
+server.listen(4000).then(({ url }) => {
+    console.log(`🚀 Run server in the URL: ${url}`);
+});
+
