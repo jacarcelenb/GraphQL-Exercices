@@ -1,5 +1,6 @@
 const Pizza = require("../models/pizza");
 const Ingredient = require("../models/ingredient");
+const PizzaIngredient = require("../models/pizza-ingredient");
 
 const pizzaResolver = {
   Query: {
@@ -30,26 +31,23 @@ const pizzaResolver = {
         if (pizza === undefined) {
           return null;
         } else {
-          const newPizza = await db.one(
-            `INSERT INTO pizzas(piz_name, piz_origin, piz_description ,piz_state)
-                                    VALUES ($1, $2, $3, $4) returning *`,
-            [
-              pizza.piz_name,
-              pizza.piz_origin,
-              pizza.piz_description,
-              pizza.piz_state,
-            ]
-          );
+          const newPizza = await Pizza.create({
+            piz_name: pizza.piz_name,
+            piz_origin: pizza.piz_origin,
+            piz_description: pizza.piz_description,
+            piz_state: pizza.piz_state,
+          });
+
           if (pizza.ingredientsPizza.length > 0) {
             pizza.ingredientsPizza.forEach(async (element) => {
-              await db.none(
-                `INSERT INTO pizzas_ingredients(piz_id, ing_id, pi_portion)
-                            VALUES ($1, $2, $3);`,
-                [newPizza.piz_id, element.ing_id, element.pi_portion]
-              );
+              await PizzaIngredient.create({
+                piz_id: newPizza.dataValues.piz_id,
+                ing_id: element.ing_id,
+                pi_portion: element.pi_portion,
+              });
             });
+            return newPizza;
           }
-          return newPizza;
         }
       } catch (error) {
         return error;
@@ -60,32 +58,41 @@ const pizzaResolver = {
         if (pizza === undefined) {
           return null;
         } else {
-          const newPizza = await db.one(
-            `UPDATE pizzas
-                                SET piz_name=$2, piz_origin=$3, piz_state=$4,
-                                piz_description=$5
-                                WHERE piz_id=$1 returning *;`,
-            [
-              pizza.piz_id,
-              pizza.piz_name,
-              pizza.piz_origin,
-              pizza.piz_state,
-              pizza.piz_description,
-            ]
-          );
+          const Updatepizza = await Pizza.findOne({
+            attributes: [
+              "piz_name",
+              "piz_origin",
+              "piz_state",
+              "piz_description",
+              "piz_id",
+            ],
+            where: { piz_id: pizza.piz_id },
+          });
+
+          Updatepizza.set({
+            piz_id: pizza.piz_id,
+            piz_name: pizza.piz_name,
+            piz_origin: pizza.piz_origin,
+            piz_state: pizza.piz_state,
+            piz_description: pizza.piz_description,
+          });
+
+          await Updatepizza.save();
+
           if (pizza.ingredientsPizza.length > 0) {
-            db.none(`DELETE FROM pizzas_ingredients WHERE piz_id=$1`, [
-              newPizza.piz_id,
-            ]);
+            await PizzaIngredient.destroy({
+              where: { piz_id: pizza.piz_id },
+            });
+
             pizza.ingredientsPizza.forEach(async (element) => {
-              await db.none(
-                `INSERT INTO pizzas_ingredients(piz_id, ing_id, pi_portion)
-                            VALUES ($1, $2, $3);`,
-                [newPizza.piz_id, element.ing_id, element.pi_portion]
-              );
+              await PizzaIngredient.create({
+                piz_id: pizza.piz_id,
+                ing_id: element.ing_id,
+                pi_portion: element.pi_portion,
+              });
             });
           }
-          return newPizza;
+          return Updatepizza;
         }
       } catch (error) {
         return error;
@@ -99,11 +106,12 @@ const pizzaResolver = {
         } else {
           const { id } = value;
           if (id > 0) {
-            await db
-              .none(`DELETE FROM pizzas_ingredients WHERE piz_id=$1`, [id])
-              .then(async () => {
-                await db.none(`DELETE FROM pizzas WHERE piz_id=$1`, [id]);
-              });
+            await PizzaIngredient.destroy({
+              where: { piz_id: id },
+            });
+            await Pizza.destroy({
+              where: { piz_id: id },
+            });
           }
           return `Pizza ${id} eliminada correctamente`;
         }
@@ -117,12 +125,14 @@ const pizzaResolver = {
         if (ingredient === undefined) {
           return null;
         } else {
-          const newIngredient = await db.one(
-            `INSERT INTO ingredients(ing_name, ing_calories, ing_state)
-                                    VALUES ($1, $2, true) returning *`,
-            [ingredient.ing_name, ingredient.ing_calories]
-          );
-          return newIngredient;
+          console.log({ingredient})
+          const createdIngredient = await Ingredient.create({
+            ing_name: ingredient.ing_name,
+            ing_calories: ingredient.ing_calories,
+            ing_state: true,
+          });
+
+          return createdIngredient;
         }
       } catch (error) {
         return error;
@@ -133,17 +143,21 @@ const pizzaResolver = {
         if (ingredient === undefined) {
           return null;
         } else {
-          const updateingredient = await db.one(
-            `UPDATE ingredients SET ing_name=$2, ing_calories=$3, ing_state=$4
-                                WHERE ing_id=$1 returning *;`,
-            [
-              ingredient.ing_id,
-              ingredient.ing_name,
-              ingredient.ing_calories,
-              ingredient.ing_state,
-            ]
-          );
-          return updateingredient;
+          const updateIngredient = await Ingredient.findOne({
+            attributes: ["ing_name", "ing_calories", "ing_state", "ing_id"],
+            where: { ing_id: ingredient.ing_id },
+          });
+
+          updateIngredient.set({
+            ing_id: ingredient.ing_id,
+            ing_name: ingredient.ing_name,
+            ing_calories: ingredient.ing_calories,
+            ing_state: ingredient.ing_state,
+          });
+
+          await updateIngredient.save();
+
+          return updateIngredient;
         }
       } catch (error) {
         return error;
@@ -156,55 +170,18 @@ const pizzaResolver = {
         } else {
           const { id } = value;
           if (id > 0) {
-            await db
-              .none(`DELETE FROM pizzas_ingredients WHERE ing_id=$1`, [id])
-              .then(async () => {
-                await db.none(`DELETE FROM ingredients WHERE ing_id=$1`, [id]);
-              });
+            await PizzaIngredient.destroy({
+              where: { ing_id: id },
+            });
+            await Ingredient.destroy({
+              where: { ing_id: id },
+            });
           }
           return `Ingrediente ${id} eliminado correctamente`;
         }
       } catch (error) {
         return error;
       }
-    },
-    async deletePizzaIngredient(root, value) {
-      let piz_id = value.pizzaIngredient.piz_id;
-      let ing_id = value.pizzaIngredient.ing_id;
-      try {
-        if (value === undefined) {
-          return null;
-        } else {
-          if (ing_id > 0 && piz_id > 0) {
-            await db.none(
-              `DELETE FROM pizzas_ingredients WHERE piz_id=$1 and ing_id=$2`,
-              [piz_id, ing_id]
-            );
-          }
-          return `Ingrediente ${ing_id} eliminado correctamente de la pizza ${piz_id}`;
-        }
-      } catch (error) {
-        return error;
-      }
-    },
-  },
-  pizzas: {
-    ingredients(pizza) {
-      return db.any(
-        `select i.*, pi.pi_portion
-            from pizzas p, ingredients i, pizzas_ingredients pi
-            where p.piz_id = pi.piz_id AND pi.ing_id = i.ing_id AND p.piz_id=$1;`,
-        [pizza.piz_id]
-      );
-    },
-    async total_calories(pizza) {
-      const total_colories = await db.one(
-        `select sum(pi.pi_portion * i.ing_calories) total_calories
-                            from pizzas p, ingredients i, pizzas_ingredients pi
-                            where p.piz_id = pi.piz_id AND pi.ing_id = i.ing_id AND p.piz_id=$1`,
-        [pizza.piz_id]
-      );
-      return total_colories.total_calories;
     },
   },
 };

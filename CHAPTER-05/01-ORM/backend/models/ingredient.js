@@ -25,14 +25,4 @@ const Ingredient = sequelize.define(
   }
 );
 
-Ingredient.hasMany(PizzaIngredient, {
-  foreinkey: "ing_id",
-  sourceKey: "ing_id",
-});
-
-PizzaIngredient.belongsTo(Ingredient, {
-  foreinkey: "ing_id",
-  targetId: "ing_id",
-});
-
 module.exports = Ingredient;
