@@ -1,9 +1,9 @@
 const DataTypes = require("sequelize");
 const sequelize = require("../config/cnn");
-const PizzaIngredient = require("./pizza-ingredient");
+
 
 const Pizza = sequelize.define(
-  "pizzas",
+  "Pizza",
   {
     piz_id: {
       type: DataTypes.INTEGER,
@@ -24,10 +24,11 @@ const Pizza = sequelize.define(
     },
   },
   {
+    tableName:"pizzas",
     timestamps: false,
   }
 );
 
-
-
 module.exports = Pizza;
+
+

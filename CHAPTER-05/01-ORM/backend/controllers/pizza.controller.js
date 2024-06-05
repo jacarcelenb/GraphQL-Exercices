@@ -1,6 +1,7 @@
 const Pizza = require("../models/pizza");
 const Ingredient = require("../models/ingredient");
 const PizzaIngredient = require("../models/pizza-ingredient");
+const totalCalories = require("../models/complex-queries");
 
 const pizzaResolver = {
   Query: {
@@ -125,7 +126,7 @@ const pizzaResolver = {
         if (ingredient === undefined) {
           return null;
         } else {
-          console.log({ingredient})
+          console.log({ ingredient });
           const createdIngredient = await Ingredient.create({
             ing_name: ingredient.ing_name,
             ing_calories: ingredient.ing_calories,
@@ -182,6 +183,18 @@ const pizzaResolver = {
       } catch (error) {
         return error;
       }
+    },
+  },
+  pizzas: {
+    async ingredients(pizzas) {
+      const pizza = await Pizza.findByPk(pizzas.piz_id);
+      const ingredients = await pizza.getIngredients();
+      return ingredients;
+    },
+
+    async total_calories(pizza) {
+      const total = await totalCalories(pizza.piz_id);
+      return total[0].total_calories;
     },
   },
 };
