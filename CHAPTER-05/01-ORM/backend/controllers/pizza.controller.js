@@ -1,7 +1,7 @@
 const Pizza = require("../models/pizza");
 const Ingredient = require("../models/ingredient");
 const PizzaIngredient = require("../models/pizza-ingredient");
-const totalCalories = require("../models/complex-queries");
+const {totalCalories,getIngredientsByPizza} = require("../models/complex-queries");
 
 const pizzaResolver = {
   Query: {
@@ -86,6 +86,12 @@ const pizzaResolver = {
             });
 
             pizza.ingredientsPizza.forEach(async (element) => {
+              console.log("Pizzza Ingredients")
+              console.log({
+                piz_id: pizza.piz_id,
+                ing_id: element.ing_id,
+                pi_portion: element.pi_portion,
+              })
               await PizzaIngredient.create({
                 piz_id: pizza.piz_id,
                 ing_id: element.ing_id,
@@ -93,6 +99,7 @@ const pizzaResolver = {
               });
             });
           }
+
           return Updatepizza;
         }
       } catch (error) {
@@ -187,8 +194,7 @@ const pizzaResolver = {
   },
   pizzas: {
     async ingredients(pizzas) {
-      const pizza = await Pizza.findByPk(pizzas.piz_id);
-      const ingredients = await pizza.getIngredients();
+      const ingredients = getIngredientsByPizza(pizzas.piz_id);
       return ingredients;
     },
 

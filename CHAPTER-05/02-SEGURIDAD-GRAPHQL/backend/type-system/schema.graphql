@@ -1,0 +1,112 @@
+type pizzas {
+  piz_id: Int!
+  piz_name: String!
+  piz_origin: String!
+  piz_description: String
+  piz_state: Boolean!
+  total_calories: Float
+  ingredients: [ingredients]
+}
+
+type ingredients {
+  ing_id: Int!
+  ing_name: String!
+  ing_calories: Float!
+  ing_state: Boolean!
+  pi_portion: Int
+}
+
+type users {
+  usr_id: Int
+  usr_name: String!
+  usr_email: String!
+  usr_password: String!
+  usr_status: Boolean!
+  rol_id:Int
+  user_token: String
+}
+
+
+
+
+type Query {
+  pizzas(piz_id: Int): [pizzas]
+  ingredients(ing_id:Int): [ingredients]
+  users(usr_id:Int): [users]
+}
+
+type Mutation {
+  createPizza(pizza: inputPizza): pizzas
+  updatePizza(pizza: updatePizza): pizzas
+  deletePizza(id: ID!): String
+  createIngredient(ingredient: inputIngredient): ingredients
+  updateIngredient(ingredient: updateIngredient): ingredients
+  deleteIngredient(id: ID!): String
+  deletePizzaIngredient(pizzaIngredient: pizzaIngredient): String
+  loginUser(usr_email: String!, usr_password: String!): users
+  createUser(user: addUser): users
+  updateUser(user: modifyUser): users
+  deleteUser(id: ID!): String
+}
+
+input addUser {
+  usr_name: String!
+  usr_email: String!
+  usr_password: String!
+  usr_status: Boolean!
+  rol_id: Int,
+  user_token: String
+
+}
+
+input modifyUser {
+  usr_id: Int!
+  usr_name: String
+  usr_email: String
+  usr_password: String
+  usr_status: Boolean
+  rol_id: Int,
+  user_token: String
+
+}
+input inputPizza {
+  piz_name: String!
+  piz_origin: String!
+  piz_description: String!
+  piz_state: Boolean
+  ingredientsPizza: [ingredietPortion]
+}
+
+input updatePizza {
+  piz_id: Int!
+  piz_name: String!
+  piz_origin: String!
+  piz_description: String!
+  piz_state: Boolean
+  ingredientsPizza: [ingredietPortion]
+}
+
+input inputIngredient {
+  ing_name: String!
+  ing_calories: Float!
+  ing_state: Boolean
+  pi_portion: Int
+}
+
+input updateIngredient {
+  ing_id: Int!
+  ing_name: String
+  ing_calories: Float
+  ing_state: Boolean
+  pi_portion: Int
+}
+
+input ingredietPortion {
+  ing_id: Int!
+  pi_portion: Int
+}
+
+input pizzaIngredient {
+  ing_id: Int
+  piz_id: Int
+}
