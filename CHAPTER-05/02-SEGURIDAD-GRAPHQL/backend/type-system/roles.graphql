@@ -1,0 +1,27 @@
+type roles {
+  rol_id: Int!
+  rol_description: String
+  rol_status: Boolean
+}
+
+type Query {
+  roles(rol_id: Int):  [roles]
+}
+
+input CreateRoleInput {
+  rol_description: String
+  rol_status: Boolean
+}
+
+input UpdateRoleInput {
+  rol_id: Int!
+  rol_description: String
+  rol_status: Boolean
+}
+
+type Mutation {
+  createRole(input: CreateRoleInput): roles
+  updateRole(input: UpdateRoleInput): roles
+  deleteRole(rol_id: Int!): Boolean
+}
+

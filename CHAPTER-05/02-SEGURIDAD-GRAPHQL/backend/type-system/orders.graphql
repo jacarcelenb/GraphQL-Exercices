@@ -1,0 +1,60 @@
+type orders {
+  ord_id: Int!
+  usr_id: Int
+  ord_date: String
+  ord_description: String
+}
+
+type detailOrder {
+  de_id: Int!
+  ord_id: Int
+  usr_id: Int
+  piz_id: Int
+  de_subtotal: Float
+  de_total: Float
+}
+
+type Query {
+  orders(ord_id: Int): [orders]
+  detailOrders(de_id: Int!):[detailOrder]
+}
+
+input CreateOrderInput {
+  usr_id: Int
+  ord_date: String
+  ord_description: String
+}
+
+input UpdateOrderInput {
+  ord_id: Int!
+  usr_id: Int
+  ord_date: String
+  ord_description: String
+}
+
+input CreateDetailOrderInput {
+  ord_id: Int
+  usr_id: Int
+  piz_id: Int
+  de_subtotal: Float
+  de_total: Float
+}
+
+input UpdateDetailOrderInput {
+  de_id: Int!
+  ord_id: Int
+  usr_id: Int
+  piz_id: Int
+  de_subtotal: Float
+  de_total: Float
+}
+
+type Mutation {
+  createOrder(input: CreateOrderInput): orders
+  updateOrder(input: UpdateOrderInput): orders
+  deleteOrder(ord_id: Int!): Boolean
+
+  createDetailOrder(input: CreateDetailOrderInput): detailOrder
+  updateDetailOrder(input: UpdateDetailOrderInput): detailOrder
+  deleteDetailOrder(de_id: Int!): Boolean
+}

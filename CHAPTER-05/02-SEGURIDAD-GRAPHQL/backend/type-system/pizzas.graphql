@@ -1,3 +1,4 @@
+
 type pizzas {
   piz_id: Int!
   piz_name: String!
@@ -16,23 +17,9 @@ type ingredients {
   pi_portion: Int
 }
 
-type users {
-  usr_id: Int
-  usr_name: String!
-  usr_email: String!
-  usr_password: String!
-  usr_status: Boolean!
-  rol_id:Int
-  user_token: String
-}
-
-
-
-
 type Query {
   pizzas(piz_id: Int): [pizzas]
-  ingredients(ing_id:Int): [ingredients]
-  users(usr_id:Int): [users]
+  ingredients(ing_id: Int): [ingredients]
 }
 
 type Mutation {
@@ -43,32 +30,8 @@ type Mutation {
   updateIngredient(ingredient: updateIngredient): ingredients
   deleteIngredient(id: ID!): String
   deletePizzaIngredient(pizzaIngredient: pizzaIngredient): String
-  loginUser(usr_email: String!, usr_password: String!): users
-  createUser(user: addUser): users
-  updateUser(user: modifyUser): users
-  deleteUser(id: ID!): String
 }
 
-input addUser {
-  usr_name: String!
-  usr_email: String!
-  usr_password: String!
-  usr_status: Boolean!
-  rol_id: Int,
-  user_token: String
-
-}
-
-input modifyUser {
-  usr_id: Int!
-  usr_name: String
-  usr_email: String
-  usr_password: String
-  usr_status: Boolean
-  rol_id: Int,
-  user_token: String
-
-}
 input inputPizza {
   piz_name: String!
   piz_origin: String!
