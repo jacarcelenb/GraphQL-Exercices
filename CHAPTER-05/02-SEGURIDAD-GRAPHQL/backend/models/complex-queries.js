@@ -4,6 +4,7 @@ const PizzaIngredient = require("../models/pizza-ingredient");
 const Ingredient = require("../models/ingredient");
 const { QueryTypes } = require("sequelize");
 
+
 const totalCalories = async (piz_id) => {
   const total = await sequelize.query(
     `select sum(pi.pi_portion * i.ing_calories) total_calories
@@ -56,7 +57,11 @@ const getPizzaIngredients = async (piz_id) => {
     ],
   });
 
-  for (let index = 0; index < ingredients.dataValues.Ingredients.length;index++) {
+  for (
+    let index = 0;
+    index < ingredients.dataValues.Ingredients.length;
+    index++
+  ) {
     const element = ingredients.dataValues.Ingredients[index];
     ingredient.ing_id = element.dataValues.ing_id;
     ingredient.ing_name = element.dataValues.ing_name;
@@ -68,4 +73,8 @@ const getPizzaIngredients = async (piz_id) => {
   return ingredientList;
 };
 
-module.exports = { totalCalories, getIngredientsByPizza, getPizzaIngredients };
+module.exports = {
+  totalCalories,
+  getIngredientsByPizza,
+  getPizzaIngredients,
+};

@@ -3,6 +3,7 @@ type orders {
   usr_id: Int
   ord_date: String
   ord_description: String
+  detail:[detailOrder]
 }
 
 type detailOrder {

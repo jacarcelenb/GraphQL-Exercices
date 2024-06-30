@@ -1,6 +1,6 @@
 const Order = require("../models/order");
 const DetailOrder = require("../models/detailorder");
-
+const {getDetailbyOrder} = require("../models/complex-queries");
 const orderResolver = {
   Query: {
     orders: async (_, { ord_id }, { userId }) => {
@@ -90,6 +90,11 @@ const orderResolver = {
         }
       }
     },
+  },
+  orders: {
+    async detail(order) {
+      return getDetailbyOrder(order.ord_id);
+    }
   },
 };
 

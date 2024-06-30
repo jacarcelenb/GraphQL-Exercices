@@ -95,13 +95,12 @@ const userResolver = {
               where: { usr_id: user.usr_id },
             });
 
-            updateUser.set({
-              usr_id: user.usr_id,
-              usr_name: user.usr_name,
-              usr_email: user.usr_email,
-              usr_password: user.usr_password,
-              usr_status: user.usr_status,
-            });
+              updateUser.set({
+                usr_id: user.usr_id,
+                usr_name: user.usr_name,
+                usr_email: user.usr_email,
+                usr_status: user.usr_status,
+              });
 
             await updateUser.save();
 
@@ -121,6 +120,7 @@ const userResolver = {
             return null;
           } else {
             const { id } = value;
+            console.log(id, "Usuario deleted");
             if (id > 0) {
               await User.destroy({
                 where: { usr_id: id },

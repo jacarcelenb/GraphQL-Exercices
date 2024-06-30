@@ -1,7 +1,11 @@
 const Pizza = require("../models/pizza");
 const Ingredient = require("../models/ingredient");
 const PizzaIngredient = require("../models/pizza-ingredient");
-const {totalCalories,getIngredientsByPizza} = require("../models/complex-queries");
+const {
+  totalCalories,
+  getIngredientsByPizza,
+} = require("../models/complex-queries");
+
 const pizzaResolver = {
   Query: {
     async pizzas(root, { piz_id }, { userId }) {

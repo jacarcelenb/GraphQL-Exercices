@@ -35,7 +35,6 @@ input modifyUser {
   usr_id: Int!
   usr_name: String
   usr_email: String
-  usr_password: String
   usr_status: Boolean
   rol_id: Int,
   user_token: String

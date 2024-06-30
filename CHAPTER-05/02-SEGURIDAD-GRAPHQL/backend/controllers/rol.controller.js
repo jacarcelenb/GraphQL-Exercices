@@ -7,7 +7,7 @@ const roleResolver = {
         throw new Error("Not authenticated");
       } else {
         try {
-          return await Role.findByPk(rol_id);
+          return await Role.findAll();
         } catch (error) {
           throw new Error("Error fetching role");
         }
