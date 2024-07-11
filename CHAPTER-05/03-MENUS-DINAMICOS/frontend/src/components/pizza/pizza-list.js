@@ -137,6 +137,7 @@ const PizzaList = () => {
             tableStyle={{ minWidth: "60rem" }}
             emptyMessage="No existen registros."
           >
+            <Column header="Acciones" body={actionsButtons}></Column>
             <Column
               field="piz_name"
               sortable
@@ -167,7 +168,7 @@ const PizzaList = () => {
               header="Ingredientes"
               body={IngredientsPizza}
             ></Column>
-            <Column header="Acciones" body={actionsButtons}></Column>
+
           </DataTable>
         </div>
       </>

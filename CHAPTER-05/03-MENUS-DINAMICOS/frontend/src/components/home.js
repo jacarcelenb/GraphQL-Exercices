@@ -1,89 +1,39 @@
-import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { Button } from "primereact/button";
-import { Card } from "primereact/card";
-import { InputText } from "primereact/inputtext";
+import React from "react";
 import Header from "./shared/header";
-import { LOGIN_USER } from "../services/user-service";
-import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
-import { showMessage } from "../services/message-service";
-import { Password } from "primereact/password";
 
-const Inicio = ({ setAuth }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
-  const [login, { error }] = useMutation(LOGIN_USER, {
-    onCompleted: (data) => {
-      localStorage.setItem("token", data.loginUser.user_token);
-      localStorage.setItem("rol", data.loginUser.rol_id);
-      localStorage.setItem("username", data.loginUser.usr_name);
-      localStorage.setItem("status", data.loginUser.usr_status);
-      setAuth(jwtDecode(data.loginUser.user_token));
-    },
-  });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await login({
-        variables: { usr_email: username, usr_password: password },
-      });
-
-      if (localStorage.getItem("status") === "true") {
-        navigate("pizzas");
-      } else {
-        showMessage("Usuario no activo", "error");
-      }
-    } catch (error) {
-      showMessage(error.message, "error");
-    }
-  };
-
+const MainPage = () => {
   return (
-    <div className="card-login flex justify-content-center">
+    <div className="main-container">
       <Header></Header>
-      <Card className="md:w-25rem">
-        <h2> {" Iniciar Sesión "}</h2>
-        <img
-          src={require("../assets/images/pizza.jpg")}
-          className="img-login-main"
-          alt="..."
-        />
+      <div className="card mb-3 card-container">
+        <div className="row g-0">
+          <div className="col-md-4">
+            <img
+              src={require("../assets/images/bg_1.png")}
+              className="img-fluid rounded-start"
+              alt="..."
+            />
+          </div>
+          <div className="col-md-8">
+            <div className="card-body">
+              <h5 className="card-title title-page">🍕 Bienvenidos🍕</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
         <br></br>
-        <InputText
-          placeholder="Correo Electronico"
-          className="input-main-login"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <Password
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          feedback={true}
-          toggleMask={true}
-          inputClassName="p-inputtext"
-          placeholder="Contraseña"
-          weakLabel="Debil"
-          mediumLabel="Media"
-          strongLabel="Fuerte"
-          panelClassName="password-panel"
-          className="password-input"
-        />
-        <br />
-        <br />
-        <Button
-          onClick={handleSubmit}
-          label="Iniciar Sesión"
-          rounded
-          className="input-main-login"
-        />
-      </Card>
+        <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+          <p className="col-md-4 mb-0  footer-title">© 2024 Pizza App 🍕</p>
+          <a
+            href="/"
+            className="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
+          ></a>
+        </footer>
+      </div>
     </div>
   );
 };
 
-export default Inicio;
+export default MainPage;

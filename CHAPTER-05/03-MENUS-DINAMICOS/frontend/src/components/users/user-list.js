@@ -11,6 +11,7 @@ import UserForm from "./user-form";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
+import UserMenu from "./user-menu";
 const UserList = () => {
   const [user, setUser] = useState(null);
   // Queries
@@ -26,7 +27,6 @@ const UserList = () => {
   const selectUser = (user) => {
     setUser(user);
   };
-
 
   const DeleteUser = (item) => {
     let id = item.usr_id;
@@ -55,6 +55,18 @@ const UserList = () => {
       <>
         <button
           type="button"
+          className="btn btn-info"
+          data-bs-toggle="modal"
+          data-bs-target="#UserMenuModal"
+          style={{ marginRight: 10 }}
+          onClick={() => {
+            selectUser(item);
+          }}
+        >
+          <i className="fa fa-eye" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
           className="btn btn-warning"
           data-bs-toggle="modal"
           data-bs-target="#UserModal"
@@ -74,6 +86,7 @@ const UserList = () => {
         >
           <i className="fa fa-trash" aria-hidden="true" />
         </button>
+         <UserMenu user={user}></UserMenu>
         <UserForm user={user}></UserForm>
       </>
     );
@@ -89,7 +102,12 @@ const UserList = () => {
   };
 
   const userRol = (item) => {
-    return <Tag value={item.rol_id === 1 ? "ADMINISTRADOR" : "OPERADOR"} severity={getRolLabel(item)}></Tag>;
+    return (
+      <Tag
+        value={item.rol_id === 1 ? "ADMINISTRADOR" : "OPERADOR"}
+        severity={getRolLabel(item)}
+      ></Tag>
+    );
   };
 
   const getRolLabel = (item) => {
@@ -117,8 +135,6 @@ const UserList = () => {
         return null;
     }
   };
-
-
 
   return (
     <div>
@@ -150,6 +166,7 @@ const UserList = () => {
             tableStyle={{ minWidth: "60rem" }}
             emptyMessage="No existen registros."
           >
+            <Column header="Acciones" body={actionsButtons}></Column>
             <Column
               field="usr_name"
               sortable
@@ -181,7 +198,7 @@ const UserList = () => {
               body={userStatus}
             ></Column>
 
-            <Column header="Acciones" body={actionsButtons}></Column>
+
           </DataTable>
         </div>
       </>

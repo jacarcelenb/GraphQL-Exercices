@@ -1,12 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import PizzaList from "./components/pizza/pizza-list";
-import Home from "./components/home";
+import MainPage from "./components/home";
 import IngredientList from "./components/ingredient/ingredient-list";
 import UserList from "./components/users/user-list";
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import PrivateRoute from "./components/auth/privateroute";
 import RoleList from "./components/role/role-list";
+import RoleMenuList from "./components/access-menu/rolmenu-list";
+import Login from "./components/login";
 function App() {
   const [auth, setAuth] = useState(null);
 
@@ -23,7 +25,8 @@ function App() {
   return (
 
       <Routes>
-        <Route path="/" element={<Home setAuth={setAuth}></Home>}></Route>
+        <Route path="/" element={<MainPage></MainPage>}></Route>
+        <Route path="login" element={<Login setAuth={setAuth}></Login>}></Route>
         <Route path="pizzas"
          element={  <PrivateRoute auth={auth}><PizzaList/></PrivateRoute>}
         ></Route>
@@ -41,7 +44,15 @@ function App() {
           path="roles"
           element={<PrivateRoute auth={auth}><RoleList /></PrivateRoute>}
         ></Route>
+
+      <Route
+          path="accesos"
+          element={<PrivateRoute auth={auth}><RoleMenuList /></PrivateRoute>}
+        ></Route>
       </Routes>
+
+
+
 
   );
 }

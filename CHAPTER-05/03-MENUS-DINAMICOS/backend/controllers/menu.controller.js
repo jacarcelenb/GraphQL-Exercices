@@ -1,15 +1,24 @@
 const Menu = require("../models/menu");
 
-const resolvers = {
+const MenuResolver = {
   Query: {
-    async menus(root, { userId }) {
+    async menus(root, { mn_id }, { userId }) {
+      console.log(userId);
       if (!userId) {
         throw new Error("Not authenticated");
       } else {
-        return Menu.findAll();
+        if (mn_id === undefined) {
+          return await Menu.findAll();
+
+        } else {
+          const menu = await Menu.findOne({
+            where: { mn_id },
+          });
+          return [menu.dataValues];
+        }
       }
     },
   },
 };
 
-module.exports = resolvers;
+module.exports = MenuResolver;

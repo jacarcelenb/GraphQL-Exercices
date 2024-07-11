@@ -1,26 +1,21 @@
-const RoleMenu = require("../models/role-menu");
 const { getMenuByRol } = require("../models/complex-queries");
+const RoleMenu = require("../models/role-menu");
 
-const resolver = {
+
+const RoleMenuResolver = {
   Query: {
-    async rolmenus(root, { rol_id }, { userId }) {
+    async rolemenus(root, { rol_id }, { userId }) {
       if (!userId) {
         throw new Error("Not authenticated");
       } else {
-      }
-
-      const role_menu = await RoleMenu.findOne({
-        where: { rol_id: rol_id },
-      });
-      return [role_menu.dataValues];
-    },
-
-    async rolemenus(root, { userId }) {
-      if (!userId) {
-        throw new Error("Not authenticated");
-      } else {
-        const role_menu = await RoleMenu.findAll();
-        return role_menu;
+        if (rol_id === undefined) {
+          return await RoleMenu.findAll();
+        } else {
+          const role_menu = await RoleMenu.findOne({
+            where: { rol_id: rol_id },
+          });
+          return [role_menu.dataValues];
+        }
       }
     },
   },
@@ -40,26 +35,26 @@ const resolver = {
         await RoleMenu.update(input, {
           where: { rm_id: input.rm_id },
         });
-        return await RoleMenu.findByPk(rm_id);
+        return await RoleMenu.findByPk(input.rm_id);
       }
     },
-    deleteRoleMenu: async (_, { rm_id }) => {
+    deleteRoleMenu: async (_, { rm_id },{userId }) => {
+      console.log("rm_id ", rm_id)
       if (!userId) {
         throw new Error("Not authenticated");
       } else {
-        const roleMenu = await RoleMenu.findByPk(rm_id);
         await RoleMenu.destroy({
-          where: { rm_id },
+          where: { rm_id:rm_id },
         });
-        return roleMenu;
+        return `Acceso Rol Menu ${rm_id} eliminado correctamente`;
       }
     },
   },
   RoleMenu: {
-    async menus(rol_menu) {
-      return getMenuByRol(rol_menu.rol_id);
+    async menus(rolemenu) {
+      return getMenuByRol(rolemenu.rol_id);
     },
   },
 };
 
-module.exports = resolver;
+module.exports = RoleMenuResolver;

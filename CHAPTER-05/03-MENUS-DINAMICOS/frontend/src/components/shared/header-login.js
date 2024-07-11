@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"
-const Header = () => {
+const HeaderLogin = () => {
 return (
     <nav
     className="navbar bg-dark border-bottom border-body"
@@ -8,10 +8,11 @@ return (
   >
     <div className="container-fluid">
       <span className="navbar-brand mb-0 h1"> 🍕Pizza App</span>
+
       <ul className="nav justify-content-end">
           <li className="nav-item">
-            <Link to="/login" className="nav-link link">
-              <i className="pi pi-user"> Iniciar Sesión</i>
+            <Link to="/" className="nav-link link">
+              <i className="pi pi-arrow-left"></i>
             </Link>
           </li>
         </ul>
@@ -21,4 +22,4 @@ return (
 )
 }
 
-export default Header
+export default HeaderLogin

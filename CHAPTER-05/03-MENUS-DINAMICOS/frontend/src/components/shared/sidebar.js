@@ -2,19 +2,27 @@ import React, { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { GET_USER_MENU } from "../../services/access-service";
+import { getRolUser, removeUserInfo } from "../../services/auth-service";
 const SideBar = () => {
   const [visible, setVisible] = useState(false);
+  const [id, setId] = useState(getRolUser());
   const navigate = useNavigate();
 
   const navigateTo = (route) => {
     navigate(route);
   };
 
+  const menulist = useQuery(GET_USER_MENU, {
+    variables: {
+      rolId: id == 0 ? 1 : id,
+    },
+  });
+
   const logOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("rol");
-    localStorage.removeItem("username");
-    navigate("/");
+    removeUserInfo();
+    navigate("/login");
   };
   return (
     <div className=" flex justify-content-start">
@@ -26,60 +34,24 @@ const SideBar = () => {
             alt="..."
             style={{ marginLeft: "5px" }}
           />
-          <h3 style={{ marginLeft: "5px" }}>Menu</h3>
+          <h3 style={{ marginLeft: "5px" }}>Menú</h3>
         </div>
 
-        {localStorage.getItem("rol") == 1 && (
-          <>
+        {menulist.data?.rolemenus[0].menus.map((item) => {
+          return (
             <Button
-              label="Dashboard"
-              icon="pi pi-book"
-              text
-              className="side-bar-opt-button"
-            />
-            <br />
-            <Button
-              label="Roles"
-              icon="pi pi-book"
+            key={item.mn_id}
+              label={item.mn_name}
+              icon={item.mn_icon}
               text
               className="side-bar-opt-button"
               onClick={() => {
-                navigateTo("/roles");
+                navigateTo(item.mn_route);
               }}
             />
-            <br />
-            <Button
-              label="Usuarios"
-              text
-              icon="pi pi-users"
-              className="side-bar-opt-button"
-              onClick={() => {
-                navigateTo("/usuarios");
-              }}
-            />
-            <br />
-          </>
-        )}
+          );
+        })}
 
-        <Button
-          label="Ingredientes"
-          icon="pi pi-briefcase"
-          className="side-bar-opt-button"
-          text
-          onClick={() => {
-            navigateTo("/ingredientes");
-          }}
-        />
-        <br />
-        <Button
-          label="Pizzas"
-          text
-          icon="pi pi-cart-minus"
-          className="side-bar-opt-button"
-          onClick={() => {
-            navigateTo("/pizzas");
-          }}
-        />
         <br />
         <Button
           label="Salir"

@@ -38,7 +38,7 @@ const getIngredientsByPizza = async (piz_id) => {
 const getMenuByRol = async (rol_id) => {
   const Menu = await sequelize.query(
     `SELECT mn.mn_id ,mn.mn_name, mn.mn_route, mn.mn_icon from menu mn , rol_menu rm
-      where rm.mn_id = mn.mn_id and rm.rol_id=?`,
+      where rm.mn_id = mn.mn_id and rm.rol_id=? order by mn.mn_id`,
     {
       plain: false,
       raw: false,

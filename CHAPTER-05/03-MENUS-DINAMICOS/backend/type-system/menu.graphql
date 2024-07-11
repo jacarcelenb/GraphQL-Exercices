@@ -22,8 +22,3 @@
     mn_icon: String
   }
 
-  type Mutation {
-    addMenu(input: MenuInput!): Menu
-    updateMenu(mn_id: Int!, input: MenuUpdateInput!): Menu
-    deleteMenu(mn_id: Int!): Menu
-  }

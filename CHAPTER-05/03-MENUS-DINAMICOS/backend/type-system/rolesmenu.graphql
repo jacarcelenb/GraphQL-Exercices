@@ -3,13 +3,7 @@ type RoleMenu {
   rol_id: Int!
   mn_id: Int!
   rm_status: Boolean!
-  menus:[Menu]
-}
-
-input RoleMenuInput {
-  rol_id: Int!
-  mn_id: Int!
-  rm_status: Boolean!
+  menus: [Menu]
 }
 
  type Menu {
@@ -19,19 +13,26 @@ input RoleMenuInput {
     mn_icon: String!
   }
 
+input RoleMenuInput {
+  rol_id: Int!
+  mn_id: Int!
+  rm_status: Boolean!
+}
+
+
 input RoleMenuUpdateInput {
+  rm_id: Int!
   rol_id: Int
   mn_id: Int
   rm_status: Boolean
 }
 
 type Query {
-  rolemenus: [RoleMenu]
-  rolmenus(rol_id: Int!): [RoleMenu]
+  rolemenus(rol_id:Int): [RoleMenu]
 }
 
 type Mutation {
   addRoleMenu(input: RoleMenuInput!): RoleMenu
-  updateRoleMenu(rm_id: Int!, input: RoleMenuUpdateInput!): RoleMenu
-  deleteRoleMenu(rm_id: Int!): RoleMenu
+  updateRoleMenu(input: RoleMenuUpdateInput!): RoleMenu
+  deleteRoleMenu(rm_id: Int!): String
 }

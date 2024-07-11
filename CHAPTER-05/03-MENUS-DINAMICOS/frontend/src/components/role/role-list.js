@@ -122,14 +122,10 @@ const RoleList = () => {
             paginator
             rows={5}
             rowsPerPageOptions={[5, 10, 25, 50]}
-            tableStyle={{ minWidth: "60rem" }}
+            tableStyle={{ minWidth: "30rem" }}
             emptyMessage="No existen registros."
           >
-            <Column
-              field="rol_id"
-              sortable
-              header="Id"
-            ></Column>
+             <Column header="Acciones" body={actionsButtons}></Column>
             <Column
               field="rol_description"
               sortable
@@ -146,7 +142,7 @@ const RoleList = () => {
               header="Estado"
               body={statusRole}
             ></Column>
-            <Column header="Acciones" body={actionsButtons}></Column>
+
           </DataTable>
         </div>
       </>

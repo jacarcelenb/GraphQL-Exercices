@@ -2,106 +2,99 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import {
-  GET_USERS,
-  CREATE_USER,
-  UPDATE_USER,
-} from "../../services/user-service";
+  GET_ROLE_MENU,
+  CREATE_ROLE_MENU,
+  UPDATE_ROLE_MENU
+} from "../../services/access-service";
+import {
+GET_MENUS
+} from "../../services/menu-service";
 import { GET_ROLES } from "../../services/role-service";
 
 import { showMessage } from "../../services/message-service";
-import { Password } from "primereact/password";
 
 
-const UserForm = ({ user }) => {
+const RoleMenuForm = ({ rolemenu }) => {
   const rolelist = useQuery(GET_ROLES);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const menulist = useQuery(GET_MENUS);
   const [state, setState] = useState(false);
   const [rolId, setrolId] = useState(0);
+  const [mnId, setmnId] = useState(0);
   const [id, setId] = useState(0);
 
   useEffect(() => {
-    if (user !== null) {
-      setName(user.usr_name);
-      setEmail(user.usr_email);
-      setPassword(user.usr_password);
-      setId(user.usr_id);
-      setState(user.usr_status);
-      setrolId(user.rol_id);
+    if (rolemenu !== null) {
+      setId(rolemenu.rm_id);
+      console.log(rolemenu.rm_id)
+      setState(rolemenu.rm_status);
+      setrolId(rolemenu.rol_id);
+      setmnId(rolemenu.mn_id);
     }
-  }, [user]);
+  }, [rolemenu]);
 
   // Mutations
-  const [createUser] = useMutation(CREATE_USER, {
-    refetchQueries: [{ query: GET_USERS }],
+  const [createRoleMenu] = useMutation(CREATE_ROLE_MENU, {
+    refetchQueries: [{ query: GET_ROLE_MENU }],
   });
 
-  const [updateUser] = useMutation(UPDATE_USER, {
-    refetchQueries: [{ query: GET_USERS }],
+  const [updateRoleMenu] = useMutation(UPDATE_ROLE_MENU, {
+    refetchQueries: [{ query: GET_ROLE_MENU }],
   });
 
   const CleanForm = () => {
-    setName("");
-    setEmail("");
+    setmnId(0);
     setrolId(0);
     setId(0);
-    setPassword("");
     setState(false);
   };
 
-  const CreateUser = (event) => {
+  const CreateRoleMenu = (event) => {
     event.preventDefault();
-    if (name.length > 0 && email.length > 0) {
-      createUser({
+    if (parseInt(rolId) > 0 && parseInt(mnId) > 0) {
+      createRoleMenu({
         variables: {
-          user: {
-            usr_name: name,
-            usr_email: email,
-            usr_status: state,
-            usr_password: password,
-            rol_id: parseInt(rolId),
-            user_token: "",
+          input: {
+            mn_id: parseInt(mnId),
+            rm_status: state,
+            rol_id: parseInt(rolId)
           },
         },
       })
         .then(() => {
-          showMessage("Usuario creado correctamente", "success");
+          showMessage("Acceso creado correctamente", "success");
         })
         .catch(() => {
-          showMessage("Error al crear el usuario", "warning");
+          showMessage("Error al crear el acceso", "warning");
         });
       document.getElementById("closeBtn").click();
     } else {
-      showMessage("No se pueden dejar los campos vacíos", "warning");
+      showMessage("No se pueden dejar sin seleccionar", "warning");
     }
   };
 
-  const UpdateUser = (event) => {
+  const UpdateRoleMenu = (event) => {
     event.preventDefault();
-    if (name.length > 0 && email.length > 0) {
-      updateUser({
+    if (parseInt(rolId) > 0 && parseInt(mnId) > 0) {
+      updateRoleMenu({
         variables: {
-          user: {
-            usr_id: id,
-            usr_name: name,
-            usr_email: email,
-            usr_status: state,
-            rol_id: parseInt(rolId),
-            user_token: "",
+          input: {
+            rm_id: parseInt(id),
+            mn_id: parseInt(mnId),
+            rm_status: state,
+            rol_id: parseInt(rolId)
           },
         },
       })
         .then(() => {
-          showMessage("Usuario actualizado correctamente", "success");
+          showMessage("Acceso actualizado correctamente", "success");
         })
         .catch((err) => {
           console.log(err);
-          showMessage("Error al actualizar el usuario", "warning");
+          showMessage("Error al actualizar el acceso", "warning");
         });
       document.getElementById("closeBtn").click();
     } else {
-      showMessage("No se pueden dejar los campos vacíos", "warning");
+      showMessage("No se pueden dejar sin seleccionar", "warning");
     }
   };
 
@@ -116,7 +109,7 @@ const UserForm = ({ user }) => {
   return (
     <div
       className="modal fade"
-      id="UserModal"
+      id="RoleMenuModal"
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -125,7 +118,7 @@ const UserForm = ({ user }) => {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="UserModalLabel">
-              Usuarios
+              Accesos
             </h1>
             <button
               type="button"
@@ -146,46 +139,7 @@ const UserForm = ({ user }) => {
                 ) : (
                   <></>
                 )}
-                <strong>Nombre</strong> <br></br>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Nombre"
-                    value={name}
-                    onChange={({ target }) => setName(target.value)}
-                  />
-                </div>
-                <strong>Correo</strong> <br></br>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Correo"
-                    value={email}
-                    onChange={({ target }) => setEmail(target.value)}
-                  />
-                </div>
-                {id == 0 && (
-                  <>
-                    <strong>Contraseña</strong>
-                    <br></br>
-                    <div className="mb-3">
-                      <Password
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        feedback={true}
-                        toggleMask={true}
-                        inputClassName="form-control"
-                        weakLabel="Debil"
-                        mediumLabel="Media"
-                        strongLabel="Fuerte"
-                        panelClassName="password-panel"
-                        className="password-input"
-                      />
-                    </div>
-                  </>
-                )}
+
                 <strong>Rol</strong> <br></br>
                 <div className="mb-3">
                   <select
@@ -198,6 +152,25 @@ const UserForm = ({ user }) => {
                       return (
                         <option key={item.rol_id} value={item.rol_id}>
                           {item.rol_description}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <br></br>
+
+                <strong>Menu</strong> <br></br>
+                <div className="mb-3">
+                  <select
+                    style={{ width: "5cm", height: "1cm" }}
+                    value={mnId}
+                    onChange={(e) => setmnId(e.target.value)}
+                  >
+                    <option>Seleccionar</option>
+                    {menulist.data?.menus.map((item) => {
+                      return (
+                        <option key={item.mn_id} value={item.mn_id}>
+                          {item.mn_name}
                         </option>
                       );
                     })}
@@ -260,7 +233,7 @@ const UserForm = ({ user }) => {
             <button
               type="button"
               className="btn btn-success"
-              onClick={id === 0 ? CreateUser : UpdateUser}
+              onClick={id === 0 ? CreateRoleMenu : UpdateRoleMenu}
             >
               Guardar <i className="fa fa-save" aria-hidden="true" />
             </button>
@@ -271,4 +244,4 @@ const UserForm = ({ user }) => {
   );
 };
 
-export default UserForm;
+export default RoleMenuForm;

@@ -1,14 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import SideBar from "./sidebar";
+import { getUsername } from "../../services/auth-service";
 
 const NavBar = () => {
-  const getUserName = () => {
-    let userName= "Operador: "
-    if (parseInt(localStorage.getItem("rol") )== 1) {
-      userName = "Admin: "
-    }
-    return userName
+  const getUser = () => {
+    return "Usuario: "+ getUsername()
   };
   return (
     <nav
@@ -22,7 +19,7 @@ const NavBar = () => {
         <ul className="nav justify-content-end">
           <li className="nav-item">
             <Link to="/" className="nav-link link">
-              <i className="pi pi-user"></i> {getUserName() + " "+ localStorage.getItem('username')}
+              <i className="pi pi-user"></i> {getUser()}
             </Link>
           </li>
         </ul>

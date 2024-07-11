@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import NavBar from "../shared/navbar";
 import { useQuery, useMutation } from "@apollo/client";
 import {
-  GET_ROLES,
-  DELETE_ROLE,
-} from "../../services/role-service";
+  GET_INGREDIENTS,
+  DELETE_INGREDIENTS,
+} from "../../services/ingredient-service";
 
 import {
   showMessage,
@@ -132,6 +132,7 @@ const IngredientList = () => {
             tableStyle={{ minWidth: "60rem" }}
             emptyMessage="No existen registros."
           >
+           <Column header="Acciones" body={actionsButtons}></Column>
             <Column
               field="ing_name"
               sortable
@@ -153,7 +154,7 @@ const IngredientList = () => {
               header="Estado"
               body={statusIngredient}
             ></Column>
-            <Column header="Acciones" body={actionsButtons}></Column>
+
           </DataTable>
         </div>
       </>
