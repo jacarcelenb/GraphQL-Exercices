@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useRef} from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import NavBar from "../shared/navbar";
 
@@ -12,8 +12,12 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import UserMenu from "./user-menu";
+import { formatUserFields } from "../../services/export-file-service";
+import ReportHeader from "../shared/report-header";
+
 const UserList = () => {
   const [user, setUser] = useState(null);
+  const dt = useRef(null);
   // Queries
   const userlist = useQuery(GET_USERS, {
     pollInterval: 500,
@@ -157,6 +161,16 @@ const UserList = () => {
           <br />
           <DataTable
             value={userlist.data?.users}
+            ref={dt}
+            header={
+              <ReportHeader
+                formatdata={formatUserFields(userlist.data?.users)}
+                data={userlist.data?.users}
+                dt={dt}
+                columns={["Nombre", "Correo", "Estado"]}
+                name={"Usuarios"}
+              ></ReportHeader>
+            }
             showGridlines
             stripedRows
             paginator

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import NavBar from "../shared/navbar";
 
@@ -11,8 +11,11 @@ import PizzaForm from "./pizza-form";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
+import ReportHeader from "../shared/report-header";
+import { formatPizzaFields, exportReportPdf } from "../../services/export-file-service";
 const PizzaList = () => {
   const [pizza, setPizza] = useState(null);
+  const dt = useRef(null);
   // Queries
   const pizzalist = useQuery(GET_PIZZAS, {
     pollInterval: 500,
@@ -60,6 +63,18 @@ const PizzaList = () => {
         >
           <i className="fa fa-pencil" aria-hidden="true" />
         </button>
+
+        <button
+          type="button"
+          className="btn btn-success"
+          style={{marginRight:"10px"}}
+          onClick={() => {
+            exportReportPdf(item,"Reporte Pizzas",["Nombre", "Calorías", "Estado"]);
+          }}
+        >
+          <i className="fa fa-download" aria-hidden="true" />
+        </button>
+
         <button
           type="button"
           className="btn btn-danger"
@@ -106,7 +121,6 @@ const PizzaList = () => {
     );
   };
 
-
   return (
     <div>
       <>
@@ -127,6 +141,16 @@ const PizzaList = () => {
           <PizzaForm pizza={pizza}></PizzaForm>
           <br />
           <DataTable
+            ref={dt}
+            header={
+              <ReportHeader
+                formatdata={formatPizzaFields(pizzalist.data?.pizzas)}
+                data={pizzalist.data?.pizzas}
+                dt={dt}
+                columns={["Nombre", "Origen", "Estado"]}
+                name={"Pizzas"}
+              ></ReportHeader>
+            }
             value={pizzalist.data?.pizzas}
             showGridlines
             stripedRows
@@ -146,7 +170,6 @@ const PizzaList = () => {
               header="Nombre"
               filterMatchMode="contains"
               showFilterMenuOptions={false}
-
             ></Column>
             <Column
               field="piz_origin"
@@ -168,7 +191,6 @@ const PizzaList = () => {
               header="Ingredientes"
               body={IngredientsPizza}
             ></Column>
-
           </DataTable>
         </div>
       </>

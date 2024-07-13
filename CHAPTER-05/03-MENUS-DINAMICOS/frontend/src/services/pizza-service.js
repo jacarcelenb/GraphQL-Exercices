@@ -9,6 +9,7 @@ const GET_PIZZAS = gql`
       piz_origin
       piz_description
       piz_state
+      total_calories
       ingredients {
         ing_name
         ing_calories

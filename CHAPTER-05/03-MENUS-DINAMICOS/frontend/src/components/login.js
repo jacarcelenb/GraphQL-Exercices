@@ -61,7 +61,7 @@ const Login = ({ setAuth }) => {
         />
         <br></br>
         <InputText
-          placeholder="Correo Electronico"
+          placeholder="Correo"
           className="input-main-login"
           value={username}
           onChange={(e) => setUsername(e.target.value)}

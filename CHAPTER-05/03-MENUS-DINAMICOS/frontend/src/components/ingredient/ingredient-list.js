@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useRef} from "react";
 import NavBar from "../shared/navbar";
 import { useQuery, useMutation } from "@apollo/client";
 import {
@@ -14,9 +14,12 @@ import IngredientForm from "./ingredient-form";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
+import { formatIngredientsFields } from "../../services/export-file-service";
+import ReportHeader from "../shared/report-header";
 const IngredientList = () => {
 
   const [ingredient, setIngredient] = useState(null);
+  const dt = useRef(null);
  // Queries
  const IngredientsList = useQuery(GET_INGREDIENTS);
   // Mutations
@@ -123,7 +126,17 @@ const IngredientList = () => {
           </div>
           <br />
           <DataTable
-            value={IngredientsList.data?.ingredients   }
+            value={IngredientsList.data?.ingredients}
+            ref={dt}
+            header={
+              <ReportHeader
+                formatdata={formatIngredientsFields(IngredientsList.data?.ingredients)}
+                data={IngredientsList.data?.ingredients}
+                dt={dt}
+                columns={["Nombre", "Calorías", "Estado"]}
+                name={"Ingredientes"}
+              ></ReportHeader>
+            }
             showGridlines
             stripedRows
             paginator
