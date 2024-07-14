@@ -40,7 +40,7 @@ const Login = ({ setAuth }) => {
       });
 
       if (getUserStatus() === "true") {
-        navigate("/pizzas");
+        navigate("/welcome");
       } else {
         showMessage("Usuario no activo", "error");
       }

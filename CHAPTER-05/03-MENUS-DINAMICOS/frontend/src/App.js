@@ -10,6 +10,7 @@ import RoleList from "./components/role/role-list";
 import RoleMenuList from "./components/access-menu/rolmenu-list";
 import Login from "./components/login";
 import Dashboard from "./components/dashboard/dashboard";
+import WelcomePage from "./components/shared/welcome-page";
 function App() {
   const [auth, setAuth] = useState(null);
 
@@ -30,6 +31,9 @@ function App() {
         <Route path="login" element={<Login setAuth={setAuth}></Login>}></Route>
         <Route path="main"
          element={  <PrivateRoute auth={auth}><Dashboard/></PrivateRoute>}
+        ></Route>
+         <Route path="welcome"
+         element={  <PrivateRoute auth={auth}><WelcomePage/></PrivateRoute>}
         ></Route>
         <Route path="pizzas"
          element={  <PrivateRoute auth={auth}><PizzaList/></PrivateRoute>}

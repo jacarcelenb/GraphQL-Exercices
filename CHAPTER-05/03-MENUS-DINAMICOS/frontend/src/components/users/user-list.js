@@ -14,7 +14,7 @@ import { Tag } from "primereact/tag";
 import UserMenu from "./user-menu";
 import { formatUserFields } from "../../services/export-file-service";
 import ReportHeader from "../shared/report-header";
-
+import { GET_ROLES } from "../../services/role-service";
 const UserList = () => {
   const [user, setUser] = useState(null);
   const dt = useRef(null);
@@ -22,6 +22,7 @@ const UserList = () => {
   const userlist = useQuery(GET_USERS, {
     pollInterval: 500,
   });
+  const rolelist = useQuery(GET_ROLES);
 
   // Mutations
   const [deleteUser] = useMutation(DELETE_USER, {
@@ -108,24 +109,37 @@ const UserList = () => {
   const userRol = (item) => {
     return (
       <Tag
-        value={item.rol_id === 1 ? "ADMINISTRADOR" : "OPERADOR"}
+        key={item.rm_id}
+        value={getRolebyId(item)}
         severity={getRolLabel(item)}
       ></Tag>
     );
   };
 
+  const getRolebyId = (item) => {
+    let name = "";
+    for (let index = 0; index < rolelist?.data.roles.length; index++) {
+      const element = rolelist.data.roles[index];
+      if (item.rol_id == element.rol_id) {
+        name = element.rol_description;
+      }
+    }
+    return name;
+  };
+
   const getRolLabel = (item) => {
     switch (item.rol_id) {
       case 1:
-        return "success";
+        return "secondary";
 
       case 2:
-        return "warning";
+        return "success";
 
       default:
-        return null;
+        return "warning";
     }
   };
+
 
   const getSeverity = (item) => {
     switch (item.usr_status) {
