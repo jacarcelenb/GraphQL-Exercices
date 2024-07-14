@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USER_MENU } from "../../services/access-service";
 import { getRolUser, removeUserInfo } from "../../services/auth-service";
 import NavBar from "./navbar";
+import { Card } from "primereact/card";
 const WelcomePage = () => {
   const [visible, setVisible] = useState(true);
   const [id, setId] = useState(getRolUser());
@@ -16,21 +17,21 @@ const WelcomePage = () => {
   });
 
   return (
-    <div className=" flex justify-content-start">
+    <div style={{textAlign:'center'}}>
       <NavBar></NavBar>
-      <div style={{ display: "inline-flex" }}>
-        <h3 style={{ marginLeft: "5px" }}>Bienvenido/a</h3>
+      <div >
         <br></br>
+        <br></br>
+        <h5><strong>Bienvenido/a</strong></h5>
         <img
           src={require(".././../assets/images/pizza.jpg")}
-          alt="..."
-          style={{ marginLeft: "5px" }}
+         className="img-welcome"
         />
-        <br></br>
-        <h3 style={{ marginLeft: "5px" }}>
+        <h5>
           Tiene acceso a los siguientes menús:
-        </h3>
+        </h5>
       </div>
+      <Card style={{width:'500px', marginLeft:'430px'}}>
 
       {menulist.data?.rolemenus[0].menus.map((item) => {
         return (
@@ -44,6 +45,7 @@ const WelcomePage = () => {
           />
         );
       })}
+      </Card>
     </div>
   );
 };
