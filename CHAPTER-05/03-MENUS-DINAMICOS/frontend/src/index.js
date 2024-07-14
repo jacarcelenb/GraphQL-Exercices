@@ -18,7 +18,7 @@ import { setContext } from "@apollo/client/link/context";
 import { BrowserRouter } from "react-router-dom";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000",
+  uri: "https://graphql-exercices.onrender.com",
 });
 
 const authLink = setContext((_, { headers }) => {
