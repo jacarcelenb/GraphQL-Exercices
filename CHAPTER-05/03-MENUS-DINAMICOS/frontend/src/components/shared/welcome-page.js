@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USER_MENU } from "../../services/access-service";
 import { getRolUser, removeUserInfo } from "../../services/auth-service";
 const WelcomePage = () => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [id, setId] = useState(getRolUser());
 
 
@@ -45,10 +45,7 @@ const WelcomePage = () => {
           );
         })}
       </Sidebar>
-      <i
-        className="pi pi-bars btn-sidebar"
-        onClick={() => setVisible(true)}
-      ></i>
+
     </div>
   );
 };
