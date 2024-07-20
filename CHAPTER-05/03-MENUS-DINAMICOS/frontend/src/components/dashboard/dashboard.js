@@ -12,7 +12,13 @@ import {
   optionsBar,
   optionsPieChart,
   optionsDonutChart,
-  configPizzaLine
+  configLine,
+  CharPizzaLine,
+  CharIngredientLine,
+  configRadarChart,
+  RadarChart,
+  PolarCharPizza,
+  PolarOptions,
 } from "../../services/chart-service";
 const Dashboard = () => {
   const pizzalist = useQuery(GET_PIZZAS, {
@@ -20,22 +26,30 @@ const Dashboard = () => {
   });
   const IngredientsList = useQuery(GET_INGREDIENTS);
 
-  const [numPizzas, setnumPizzas] = useState(pizzalist.data.pizzas.length);
+  const [numPizzas, setnumPizzas] = useState(pizzalist.data?.pizzas.length);
   const [numIngredients, setnumIngredients] = useState(
-    IngredientsList.data.ingredients.length
+    IngredientsList.data?.ingredients.length
   );
   const [chartPizzaData, setChartPizzaData] = useState(
-    getPizzasData(pizzalist.data.pizzas)
+    getPizzasData(pizzalist.data?.pizzas)
   );
   const [chartIngredientData, setChartIngredientData] = useState(
-    getIngredientsData(IngredientsList.data.ingredients)
+    getIngredientsData(IngredientsList.data?.ingredients)
   );
 
   const [chartBarOptions, setChartBarOptions] = useState(optionsBar());
   const [chartPieOptions, setChartPieOptions] = useState(optionsPieChart());
-  const [chartDonutOptions, setChartDonutOptions] = useState(optionsDonutChart());
-
-
+  const [chartRadar, setChartRadar] = useState(
+    RadarChart(pizzalist.data?.pizzas, IngredientsList.data?.ingredients)
+  );
+  const [charRadarOptions, setChartCharRadarOptions] = useState(
+    configRadarChart()
+  );
+  const [chartDonutOptions, setChartDonutOptions] = useState(
+    optionsDonutChart()
+  );
+  const [chartPolar, setCharPolar] = useState(PolarCharPizza(pizzalist.data?.pizzas))
+  const [chartPolarOptions, setCharPolarOptions] = useState(PolarOptions())
   return (
     <>
       <NavBar></NavBar>
@@ -48,7 +62,7 @@ const Dashboard = () => {
                 style={{ textAlign: "center", fontSize: "12px" }}
               >
                 <Knob
-                  value={numPizzas}
+                  value={numPizzas == undefined ? 0 : numPizzas }
                   strokeWidth={10}
                   size={100}
                   style={{ marginTop: "-25px" }}
@@ -61,7 +75,7 @@ const Dashboard = () => {
                 style={{ textAlign: "center", fontSize: "12px" }}
               >
                 <Knob
-                  value={numIngredients}
+                  value={numIngredients == undefined ? 0 : numIngredients}
                   strokeWidth={10}
                   size={100}
                   style={{ marginTop: "-25px" }}
@@ -73,7 +87,7 @@ const Dashboard = () => {
         </Card>
 
         <Card
-          title="Número de Calorías Pizzas"
+          title=" Calorías por Pizzas"
           style={{ width: "80%", marginLeft: "120px", marginTop: "30px" }}
         >
           <div className="row">
@@ -101,7 +115,7 @@ const Dashboard = () => {
         </Card>
 
         <Card
-          title="Número de Calorías Ingredientes"
+          title="Calorías por Ingredientes"
           style={{ width: "80%", marginLeft: "120px", marginTop: "30px" }}
         >
           <div className="row">
@@ -128,7 +142,7 @@ const Dashboard = () => {
         </Card>
 
         <Card
-          title="Número de Calorías Pizzas e Ingredientes"
+          title="Calorías Pizzas e Ingredientes"
           style={{ width: "80%", marginLeft: "120px", marginTop: "30px" }}
         >
           <div className="row">
@@ -154,6 +168,55 @@ const Dashboard = () => {
               </Card>
             </div>
           </div>
+        </Card>
+
+        <Card
+          title="Calorías Pizzas e Ingredientes"
+          style={{ width: "80%", marginLeft: "120px", marginTop: "30px" }}
+        >
+          <div className="row">
+            <div className="col-sm-6">
+              <Card style={{ textAlign: "center" }}>
+                <Chart
+                  type="line"
+                  data={CharPizzaLine(pizzalist.data?.pizzas)}
+                  options={configLine}
+                  height="250px"
+                  width="400px"
+                />
+              </Card>
+            </div>
+
+            <div className="col-sm-6">
+              <Card style={{ textAlign: "center" }}>
+                <Chart
+                  type="line"
+                  data={CharIngredientLine(IngredientsList.data?.ingredients)}
+                  options={configLine}
+                  height="250px"
+                  width="400px"
+                />
+              </Card>
+            </div>
+          </div>
+        </Card>
+
+        <Card
+          title="Calorías Pizzas e Ingredientes"
+          style={{ width: "80%", marginLeft: "120px", marginTop: "30px" }}
+        >
+          <div className="row">
+            <Card style={{ textAlign: "center" }}>
+              <Chart
+                type="radar"
+                data={chartRadar}
+                options={charRadarOptions}
+                height="250px"
+                width="600px"
+              />
+            </Card>
+          </div>
+
         </Card>
       </div>
     </>

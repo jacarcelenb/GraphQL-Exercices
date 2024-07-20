@@ -74,7 +74,7 @@ const Login = ({ setAuth }) => {
           toggleMask={true}
           inputClassName="p-inputtext"
           placeholder="Contraseña"
-          weakLabel="Debil"
+          weakLabel="Débil"
           mediumLabel="Media"
           strongLabel="Fuerte"
           panelClassName="password-panel"

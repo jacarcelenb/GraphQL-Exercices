@@ -1,25 +1,14 @@
 import React from "react";
 import Header from "./shared/header";
-import image from "../assets/images/bg_1.png"
+import image from "../assets/images/Error-404.png";
 
-const MainPage = () => {
+const NotFoundPage = () => {
   return (
     <div className="main-container">
       <Header></Header>
       <div className="card mb-3 card-container">
-        <div className="row g-0">
-          <div className="col-md-4">
-            <img
-              src={image}
-              className="img-fluid rounded-start"
-              alt="..."
-            />
-          </div>
-          <div className="col-md-8">
-            <div className="card-body">
-              <h5 className="card-title title-page">🍕 Bienvenidos🍕</h5>
-            </div>
-          </div>
+        <div style={{textAlign:'center'}}>
+          <img src={image} className="img-notfound" alt="..." />
         </div>
       </div>
       <div>
@@ -36,4 +25,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default NotFoundPage;

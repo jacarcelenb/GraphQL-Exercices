@@ -69,7 +69,7 @@ const PizzaList = () => {
           className="btn btn-success"
           style={{marginRight:"10px"}}
           onClick={() => {
-            exportReportPdf(item,"Reporte Pizzas",["Nombre", "Calorías", "Estado"]);
+            exportReportPdf(item,"Reporte Pizzas",["Nombre", "Calorías", "Porción","Estado"]);
           }}
         >
           <i className="fa fa-download" aria-hidden="true" />
@@ -147,7 +147,7 @@ const PizzaList = () => {
                 formatdata={formatPizzaFields(pizzalist.data?.pizzas)}
                 data={pizzalist.data?.pizzas}
                 dt={dt}
-                columns={["Nombre", "Origen", "Estado"]}
+                columns={["Nombre", "Origen" ,"Estado"]}
                 name={"Pizzas"}
               ></ReportHeader>
             }

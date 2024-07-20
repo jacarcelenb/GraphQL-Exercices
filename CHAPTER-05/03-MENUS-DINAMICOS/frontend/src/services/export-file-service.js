@@ -1,7 +1,10 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { isAvailable } from "./util-service";
-
+import image from "../assets/images/pizza.jpg";
+import logo from "../assets/images/pizza-logo.jpg";
+import Pizzalogo from "../assets/images/bg_1.png";
+import codeQR from "../assets/images/TEST.png";
 const exportCSV = (dt, selectionOnly) => {
   dt.current.exportCSV({ selectionOnly });
 };
@@ -38,7 +41,7 @@ const formatIngredientsFields = (list) => {
       } else {
         state = "Inactivo";
       }
-      formatedList.push([element.ing_name, element.ing_calories, state]);
+      formatedList.push([element.ing_name, element.ing_calories,element.pi_portion, state]);
     }
   }
 
@@ -108,73 +111,73 @@ const exportReportPdf = async (item, name, colums) => {
   const doc = new jsPDF({ filters: ["ASCIIHexEncode"] });
   let date = new Date();
   let fecha = date.toLocaleDateString();
-  autoTable(doc, {
-    body: [
-      [
-        {
-          content: name,
-          styles: {
-            halign: "left",
-            fontSize: 9,
-            fontStyle: "bold",
-            textColor: "#ffffff",
-          },
-        },
-        {
-          content: fecha,
-          styles: {
-            halign: "right",
-            fontStyle: "bold",
-            fontSize: 9,
-            textColor: "#ffffff",
-          },
-        },
-      ],
-    ],
-    theme: "plain",
-    styles: {
-      fillColor: "#0939B0",
-    },
-  });
-
-  autoTable(doc, {
-    body: [["Información"]],
-    theme: "plain",
-    styles: {
-      fontStyle: "bold",
-    },
-  });
-
-  autoTable(doc, {
-    body: [
-      ["Nombre: " + item.piz_name],
-      ["Origen: " + item.piz_origin],
-      ["Estado: " + isAvailable(item.piz_state)],
-    ],
-    theme: "grid",
-  });
-
-  autoTable(doc, {
-    body: [["Ingredientes de la Pizza "]],
-    theme: "plain",
-    styles: {
-      fontStyle: "bold",
-    },
-  });
+  doc.addImage(image, 10, 5, 20, 20);
+  doc.addImage(logo, 180, 5, 20, 20);
+  doc.setFont("helvetica", "bold");
+  doc.text("Pizza GraphQL", 80, 15);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.text("Av. República de El Salvador", 80, 20);
+  doc.text("099 250 3272", 90, 24);
+  doc.text("pizzagraphql@gmail.com", 83, 28);
+  doc.setFont("helvetica", "bold");
+  doc.text(
+    "_________________________________________________________________________________________________________________________",
+    10,
+    30
+  );
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("Información", 15, 40);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.text("Fecha: " + fecha, 15, 45);
+  doc.text(
+    "Hora: " +
+      new Date().getHours() +
+      ":" +
+      new Date().getMinutes() +
+      ":" +
+      new Date().getSeconds(),
+    15,
+    50
+  );
+  doc.text("Nombre: " + item.piz_name, 15, 55);
+  doc.text("Origen: " + item.piz_origin, 15, 60);
+  doc.text("Estado: " + isAvailable(item.piz_state), 15, 65);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("Detalle", 15, 75);
+  doc.addImage(Pizzalogo, 80, 35, 35, 35);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
 
   autoTable(doc, {
     head: [colums],
     body: formatIngredientsFields(item.ingredients),
     theme: "striped",
+    startY: 78,
+    halign: "LEFT",
+    styles: {
+      fontStyle: "normal",
+      fontSize: 8,
+    },
   });
 
   autoTable(doc, {
     body: [["Total de Calorías: " + item.total_calories]],
     theme: "plain",
     styles: {
-      fontStyle: "bold",
+      fontStyle: "normal",
+      fontSize: 8,
     },
   });
+
+  doc.text("Escanea el código:",20, 258)
+  doc.text("Página "+ doc.getNumberOfPages(),170, 290)
+  doc.addImage(codeQR, 15, 260, 35, 35);
+
+
 
   doc.save(name + ".pdf");
 };
