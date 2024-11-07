@@ -128,6 +128,15 @@ const IngredientList = () => {
           <DataTable
             value={IngredientsList.data?.ingredients}
             ref={dt}
+            header={
+              <ReportHeader
+                formatdata={formatIngredientsFields(IngredientsList.data?.ingredients)}
+                data={IngredientsList.data?.ingredients}
+                dt={dt}
+                columns={["Nombre", "Calorías", "Estado"]}
+                name={"Ingredientes"}
+              ></ReportHeader>
+            }
             showGridlines
             stripedRows
             paginator

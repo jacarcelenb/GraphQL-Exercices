@@ -66,6 +66,17 @@ const PizzaList = () => {
 
         <button
           type="button"
+          className="btn btn-success"
+          style={{marginRight:"10px"}}
+          onClick={() => {
+            exportReportPdf(item,"Reporte Pizzas",["Nombre", "Calorías", "Porción","Estado"]);
+          }}
+        >
+          <i className="fa fa-download" aria-hidden="true" />
+        </button>
+
+        <button
+          type="button"
           className="btn btn-danger"
           onClick={() => {
             DeletePizza(item);
@@ -131,6 +142,15 @@ const PizzaList = () => {
           <br />
           <DataTable
             ref={dt}
+            header={
+              <ReportHeader
+                formatdata={formatPizzaFields(pizzalist.data?.pizzas)}
+                data={pizzalist.data?.pizzas}
+                dt={dt}
+                columns={["Nombre", "Origen" ,"Estado"]}
+                name={"Pizzas"}
+              ></ReportHeader>
+            }
             value={pizzalist.data?.pizzas}
             showGridlines
             stripedRows

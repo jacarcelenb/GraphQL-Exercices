@@ -1,52 +1,44 @@
-import React, { useState , useRef} from "react";
+import React, { useState } from "react";
 import NavBar from "../shared/navbar";
 import { useQuery, useMutation } from "@apollo/client";
-import {
-  GET_INGREDIENTS,
-  DELETE_INGREDIENTS,
-} from "../../services/ingredient-service";
+import { GET_ROLES, DELETE_ROLE } from "../../services/role-service";
 
 import {
   showMessage,
   showConfirmMessage,
 } from "../../services/message-service";
-import IngredientForm from "./ingredient-form";
+import RoleForm from "./role-form";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
-import { formatIngredientsFields } from "../../services/export-file-service";
-import ReportHeader from "../shared/report-header";
-const IngredientList = () => {
-
-  const [ingredient, setIngredient] = useState(null);
-  const dt = useRef(null);
- // Queries
- const IngredientsList = useQuery(GET_INGREDIENTS);
+const RoleList = () => {
+  const [role, setRole] = useState(null);
+  // Queries
+  const RolesList = useQuery(GET_ROLES);
   // Mutations
-  const [deleteIngredient] = useMutation(DELETE_INGREDIENTS, {
-    refetchQueries: [{ query: GET_INGREDIENTS }],
+  const [deleteRole] = useMutation(DELETE_ROLE, {
+    refetchQueries: [{ query: GET_ROLES }],
   });
 
-  const selectIngredient = (ingredient) => {
-    setIngredient(ingredient);
+  const selectRole = (role) => {
+    setRole(role);
   };
 
-
-  const DeleteIngredient = (item) => {
-    let id = item.ing_id;
-    showConfirmMessage("¿Está seguro de eliminar esta Ingrediente?").then(
+  const DeleteRole = (item) => {
+    let id = item.rol_id;
+    showConfirmMessage("¿Está seguro de eliminar este rol?").then(
       (resp) => {
         if (resp.isConfirmed) {
-          deleteIngredient({
+          deleteRole({
             variables: {
-              deleteIngredientId: id.toString(),
+              rolId: parseInt(id.toString()),
             },
           })
             .then(() => {
-              showMessage("Ingrediente eliminado correctamente", "success");
+              showMessage("Rol eliminado correctamente", "success");
             })
             .catch((err) => {
-              showMessage("Error al eliminar el ingrediente", "warning");
+              showMessage("Error al eliminar el rol", "warning");
             });
         }
       }
@@ -60,10 +52,10 @@ const IngredientList = () => {
           type="button"
           className="btn btn-warning"
           data-bs-toggle="modal"
-          data-bs-target="#IngredienteModal"
+          data-bs-target="#RoleModal"
           style={{ marginRight: 10 }}
           onClick={() => {
-            selectIngredient(item);
+            selectRole(item);
           }}
         >
           <i className="fa fa-pencil" aria-hidden="true" />
@@ -72,27 +64,27 @@ const IngredientList = () => {
           type="button"
           className="btn btn-danger"
           onClick={() => {
-            DeleteIngredient(item);
+            DeleteRole(item);
           }}
         >
           <i className="fa fa-trash" aria-hidden="true" />
         </button>
-        <IngredientForm ingredient={ingredient}></IngredientForm>
+        <RoleForm role={role}></RoleForm>
       </>
     );
   };
 
-  const statusIngredient = (item) => {
+  const statusRole = (item) => {
     return (
       <Tag
-        value={item.ing_state ? "Activo" : "Inactivo"}
+        value={item.rol_status ? "Activo" : "Inactivo"}
         severity={getSeverity(item)}
       ></Tag>
     );
   };
 
   const getSeverity = (item) => {
-    switch (item.ing_state) {
+    switch (item.rol_status) {
       case true:
         return "success";
 
@@ -104,59 +96,51 @@ const IngredientList = () => {
     }
   };
 
-
-
   return (
     <div>
       <>
         <NavBar></NavBar>
         <br />
         <div className="container">
-          <h5 className="card-title title">Ingredientes</h5>
+          <h5 className="card-title title">Roles</h5>
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             <button
               className="btn btn-primary btn-lg"
               type="button"
               data-bs-toggle="modal"
-              data-bs-target="#IngredienteModal"
+              data-bs-target="#RoleModal"
             >
               <i className="fa fa-plus" aria-hidden="true" /> Crear
             </button>
-            <IngredientForm ingredient={ingredient} ></IngredientForm>
+            <RoleForm role={role}></RoleForm>
           </div>
           <br />
           <DataTable
-            value={IngredientsList.data?.ingredients}
-            ref={dt}
+            value={RolesList.data?.roles}
             showGridlines
             stripedRows
             paginator
             rows={5}
             rowsPerPageOptions={[5, 10, 25, 50]}
-            tableStyle={{ minWidth: "60rem" }}
+            tableStyle={{ minWidth: "30rem" }}
             emptyMessage="No existen registros."
           >
-           <Column header="Acciones" body={actionsButtons}></Column>
+             <Column header="Acciones" body={actionsButtons}></Column>
             <Column
-              field="ing_name"
+              field="rol_description"
               sortable
               filter
               filterPlaceholder="Buscar por nombre"
               header="Nombre"
               filterMatchMode="contains"
               showFilterMenuOptions={false}
+            ></Column>
 
-            ></Column>
-            <Column
-              field="ing_calories"
-              sortable
-              header="Calorias"
-            ></Column>
             <Column
               sortable
-              field="ing_state"
+              field="rol_status"
               header="Estado"
-              body={statusIngredient}
+              body={statusRole}
             ></Column>
 
           </DataTable>
@@ -166,4 +150,4 @@ const IngredientList = () => {
   );
 };
 
-export default IngredientList;
+export default RoleList;

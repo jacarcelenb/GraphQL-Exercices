@@ -1,56 +1,53 @@
-import React, { useState , useRef} from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import NavBar from "../shared/navbar";
-
-import { GET_USERS, DELETE_USER } from "../../services/user-service";
+import { GET_ROLES } from "../../services/role-service";
+import { DELETE_ROLE_MENU, GET_ROLE_MENU } from "../../services/access-service";
 import {
   showConfirmMessage,
   showMessage,
 } from "../../services/message-service";
-import UserForm from "./user-form";
+import { GET_MENUS } from "../../services/menu-service";
+import RoleMenuForm from "./rolmenu-form";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
-import UserMenu from "./user-menu";
-import { GET_ROLES } from "../../services/role-service";
-const UserList = () => {
-  const [user, setUser] = useState(null);
-  const dt = useRef(null);
+const RoleMenuList = () => {
+  const [rolemenu, setroleMenu] = useState(null);
+  const rolelist = useQuery(GET_ROLES);
+  const menulist = useQuery(GET_MENUS);
   // Queries
-  const userlist = useQuery(GET_USERS, {
+  const roleMenuList = useQuery(GET_ROLE_MENU, {
     pollInterval: 500,
   });
-  const rolelist = useQuery(GET_ROLES);
 
   // Mutations
-  const [deleteUser] = useMutation(DELETE_USER, {
-    refetchQueries: [{ query: GET_USERS }],
+  const [deleteRoleMenu] = useMutation(DELETE_ROLE_MENU, {
+    refetchQueries: [{ query: GET_ROLE_MENU }],
   });
 
-  const selectUser = (user) => {
-    setUser(user);
+  const selectRoleMenu = (rolemenu) => {
+    setroleMenu(rolemenu);
   };
 
-  const DeleteUser = (item) => {
-    let id = item.usr_id;
-    console.log("Delete ", id);
-    showConfirmMessage("¿Está seguro de eliminar este Usuario?").then(
-      (resp) => {
-        if (resp.isConfirmed) {
-          deleteUser({
-            variables: {
-              deleteUserId: id.toString(),
-            },
+  const DeleteRoleMenu = (item) => {
+    let id = item.rm_id;
+    showConfirmMessage("¿Está seguro de eliminar este acceso?").then((resp) => {
+      if (resp.isConfirmed) {
+        deleteRoleMenu({
+          variables: {
+            rmId: parseInt(id.toString()),
+          },
+        })
+          .then(() => {
+            showMessage("Acceso eliminado correctamente", "success");
           })
-            .then(() => {
-              showMessage("Usuario eliminado correctamente", "success");
-            })
-            .catch((err) => {
-              showMessage("Error al eliminar el usuario", "warning");
-            });
-        }
+          .catch((err) => {
+            console.log(err);
+            showMessage("Error al eliminar el acceso", "warning");
+          });
       }
-    );
+    });
   };
 
   const actionsButtons = (item) => {
@@ -58,24 +55,12 @@ const UserList = () => {
       <>
         <button
           type="button"
-          className="btn btn-info"
-          data-bs-toggle="modal"
-          data-bs-target="#UserMenuModal"
-          style={{ marginRight: 10 }}
-          onClick={() => {
-            selectUser(item);
-          }}
-        >
-          <i className="fa fa-eye" aria-hidden="true" />
-        </button>
-        <button
-          type="button"
           className="btn btn-warning"
           data-bs-toggle="modal"
-          data-bs-target="#UserModal"
+          data-bs-target="#RoleMenuModal"
           style={{ marginRight: 10 }}
           onClick={() => {
-            selectUser(item);
+            selectRoleMenu(item);
           }}
         >
           <i className="fa fa-pencil" aria-hidden="true" />
@@ -84,21 +69,20 @@ const UserList = () => {
           type="button"
           className="btn btn-danger"
           onClick={() => {
-            DeleteUser(item);
+            DeleteRoleMenu(item);
           }}
         >
           <i className="fa fa-trash" aria-hidden="true" />
         </button>
-         <UserMenu user={user}></UserMenu>
-        <UserForm user={user}></UserForm>
+        <RoleMenuForm key={item.rm_id} rolemenu={rolemenu}></RoleMenuForm>
       </>
     );
   };
 
-  const userStatus = (item) => {
+  const roleMenuStatus = (item) => {
     return (
       <Tag
-        value={item.usr_status ? "Activo" : "Inactivo"}
+        value={item.rm_status ? "Activo" : "Inactivo"}
         severity={getSeverity(item)}
       ></Tag>
     );
@@ -112,6 +96,17 @@ const UserList = () => {
         severity={getRolLabel(item)}
       ></Tag>
     );
+  };
+
+  const getMenubyId = (item) => {
+    let menuname = "";
+    for (let index = 0; index < menulist?.data.menus.length; index++) {
+      const element = menulist?.data.menus[index];
+      if (item.mn_id == element.mn_id) {
+        menuname = element.mn_name;
+      }
+    }
+    return <Tag key={item.rm_id} value={menuname} severity="warning"></Tag>;
   };
 
   const getRolebyId = (item) => {
@@ -134,15 +129,14 @@ const UserList = () => {
         return "success";
 
       default:
-        return "warning";
+        return "danger";
     }
   };
 
-
   const getSeverity = (item) => {
-    switch (item.usr_status) {
+    switch (item.rm_status) {
       case true:
-        return "success";
+        return "info";
 
       case false:
         return "danger";
@@ -158,22 +152,21 @@ const UserList = () => {
         <NavBar></NavBar>
         <br />
         <div className="container">
-          <h5 className="card-title title">Usuarios</h5>
+          <h5 className="card-title title">Accesos</h5>
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             <button
               className="btn btn-primary btn-lg"
               type="button"
               data-bs-toggle="modal"
-              data-bs-target="#UserModal"
+              data-bs-target="#RoleMenuModal"
             >
               <i className="fa fa-plus" aria-hidden="true" /> Crear
             </button>
           </div>
-          <UserForm user={user}></UserForm>
+          <RoleMenuForm rolemenu={rolemenu}></RoleMenuForm>
           <br />
           <DataTable
-            value={userlist.data?.users}
-            ref={dt}
+            value={roleMenuList.data?.rolemenus}
             showGridlines
             stripedRows
             paginator
@@ -184,28 +177,23 @@ const UserList = () => {
             emptyMessage="No existen registros."
           >
             <Column header="Acciones" body={actionsButtons}></Column>
+            <Column field="mn_id" header="Menú" body={getMenubyId}></Column>
             <Column
-              field="usr_name"
-              header="Nombre"
-            ></Column>
-            <Column
-              field="usr_email"
-              header="Correo"
-            ></Column>
-            <Column
-              sortable
               field="rol_id"
+              sortable
+              filter
+              filterPlaceholder="Buscar por rol"
               header="Rol"
+              filterMatchMode="contains"
+              showFilterMenuOptions={false}
               body={userRol}
             ></Column>
             <Column
               sortable
-              field="usr_status"
+              field="rm_status"
               header="Estado"
-              body={userStatus}
+              body={roleMenuStatus}
             ></Column>
-
-
           </DataTable>
         </div>
       </>
@@ -213,4 +201,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default RoleMenuList;
