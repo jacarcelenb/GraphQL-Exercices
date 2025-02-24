@@ -1,24 +1,24 @@
 {
-  "name": "api-pizza-graphql",
+  "name": "06-consumo-api-rest-yt",
   "version": "1.0.0",
-  "description": "API PIZZA GRAPHQL",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "pg-promise": "^11.5.4"
-  },
+  "description": "",
   "dependencies": {
-    "apollo-server": "^3.13.0",
-    "axios": "^1.7.2",
-    "dot-env": "^0.0.1",
-    "dotenv": "^16.4.5",
-    "merge-graphql-schemas": "^1.7.8",
-    "node-fetch": "^3.3.2",
-    "nodemon": "^3.1.0"
+    "@apollo/server": "^4.11.2",
+    "@graphql-tools/graphql-file-loader": "^8.0.9",
+    "@graphql-tools/load": "^8.0.10",
+    "@graphql-tools/load-files": "^7.0.0",
+    "dotenv": "^16.4.7",
+    "graphql": "^16.10.0",
+    "graphql-tag": "^2.12.6",
+    "nodemon": "^3.1.9"
   }
 }

@@ -1,9 +1,5 @@
-const sequelize = require("../config/cnn");
-const Pizza = require("../models/pizza");
-const PizzaIngredient = require("../models/pizza-ingredient");
-const Ingredient = require("../models/ingredient");
-const { QueryTypes } = require("sequelize");
-
+import { sequelize } from "../config/cnn.js";
+import { QueryTypes } from "sequelize";
 
 const totalCalories = async (piz_id) => {
   const total = await sequelize.query(
@@ -35,46 +31,4 @@ const getIngredientsByPizza = async (piz_id) => {
   return ingredient;
 };
 
-const getPizzaIngredients = async (piz_id) => {
-  let ingredientList = [];
-  const ingredient = {
-    ing_id: 0,
-    ing_name: "",
-    ing_calories: 0,
-    ing_state: true,
-    pi_portion: 0,
-  };
-  const ingredients = await Pizza.findOne({
-    where: { piz_id: piz_id },
-    include: [
-      {
-        model: Ingredient,
-        through: {
-          model: PizzaIngredient,
-          attributes: ["pi_portion"],
-        },
-      },
-    ],
-  });
-
-  for (
-    let index = 0;
-    index < ingredients.dataValues.Ingredients.length;
-    index++
-  ) {
-    const element = ingredients.dataValues.Ingredients[index];
-    ingredient.ing_id = element.dataValues.ing_id;
-    ingredient.ing_name = element.dataValues.ing_name;
-    ingredient.ing_calories = element.dataValues.ing_calories;
-    ingredient.ing_state = element.dataValues.ing_state;
-    ingredient.pi_portion = element.PizzaIngredient.dataValues.pi_portion;
-    ingredientList.push(ingredient);
-  }
-  return ingredientList;
-};
-
-module.exports = {
-  totalCalories,
-  getIngredientsByPizza,
-  getPizzaIngredients,
-};
+export {totalCalories, getIngredientsByPizza};

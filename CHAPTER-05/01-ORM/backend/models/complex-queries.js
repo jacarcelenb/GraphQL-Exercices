@@ -1,5 +1,5 @@
-const sequelize = require("../config/cnn");
-const { QueryTypes } = require("sequelize");
+import { sequelize } from "../config/cnn.js";
+import { QueryTypes } from "sequelize";
 
 const totalCalories = async (piz_id) => {
   const total = await sequelize.query(
@@ -31,4 +31,4 @@ const getIngredientsByPizza = async (piz_id) => {
   return ingredient;
 };
 
-module.exports = {totalCalories, getIngredientsByPizza};
+export {totalCalories, getIngredientsByPizza};

@@ -1,8 +1,7 @@
-const DataTypes = require("sequelize");
-const sequelize = require("../config/cnn");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/cnn.js";
 
-
-const Pizza = sequelize.define(
+ const Pizza = sequelize.define(
   "Pizza",
   {
     piz_id: {
@@ -28,7 +27,6 @@ const Pizza = sequelize.define(
     timestamps: false,
   }
 );
-
-module.exports = Pizza;
+export {Pizza}
 
 

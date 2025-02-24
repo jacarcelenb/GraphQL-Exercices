@@ -1,5 +1,5 @@
-const DataTypes = require("sequelize");
-const sequelize = require("../config/cnn");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/cnn.js";
 
 const User = sequelize.define(
   "User",
@@ -31,4 +31,4 @@ const User = sequelize.define(
   }
 );
 
-module.exports = User;
+export {User}

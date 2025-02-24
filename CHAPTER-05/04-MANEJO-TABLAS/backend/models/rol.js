@@ -1,7 +1,7 @@
-const DataTypes = require("sequelize");
-const sequelize = require("../config/cnn");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/cnn.js";
 
-const Rol = sequelize.define(
+const Role = sequelize.define(
   "Rol",
   {
     rol_id: {
@@ -22,4 +22,4 @@ const Rol = sequelize.define(
   }
 );
 
-module.exports = Rol;
+export {Role}

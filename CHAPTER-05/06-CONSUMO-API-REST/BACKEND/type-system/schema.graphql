@@ -1,8 +1,0 @@
-type Query {
-  chatbot(prompt: String): String
-}
-
-type Mutation {
-  SendPrompt(prompt: String): String
-}
-

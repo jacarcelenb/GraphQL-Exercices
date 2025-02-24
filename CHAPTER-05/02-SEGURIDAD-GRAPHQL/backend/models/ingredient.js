@@ -1,7 +1,7 @@
-const DataTypes = require("sequelize");
-const sequelize = require("../config/cnn");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/cnn.js";
 
-const Ingredient = sequelize.define(
+ const Ingredient = sequelize.define(
   "Ingredient",
   {
     ing_id: {
@@ -25,4 +25,4 @@ const Ingredient = sequelize.define(
   }
 );
 
-module.exports = Ingredient;
+export {Ingredient}

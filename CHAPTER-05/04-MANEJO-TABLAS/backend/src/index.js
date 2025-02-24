@@ -1,28 +1,46 @@
-const sequelize = require("../config/cnn");
-const { ApolloServer } = require("apollo-server");
-const { mergeResolvers, mergeTypes } = require("merge-graphql-schemas");
-const { getUserFromToken } = require("../services/auth.service");
-const path = require('path');
-const { loadFilesSync } = require('@graphql-tools/load-files');
 
-// Conexión a la BDD
-sequelize.authenticate().then(() => {
-  console.log("Estas conectado a la BD");
-});
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { sequelize } from '../config/cnn.js';
+import { getUserFromToken } from '../services/auth.service.js';
+import path from "path";
+import { fileURLToPath } from "url";
+import { loadFilesSync } from "@graphql-tools/load-files";
+import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
 
-const typeDefs = mergeTypes(loadFilesSync(path.join(__dirname, '../type-system/*.graphql')));
-const resolvers = mergeResolvers(loadFilesSync(path.join(__dirname, '../controllers')));
+// Obtener la ruta del directorio actual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Cargar y combinar los schemas
+const allSchemas = mergeTypeDefs(
+  loadFilesSync(path.join(__dirname, "../schemas/**/*.graphql"))
+);
+
+// Cargar y combinar resolvers
+const allResolvers = mergeResolvers(
+  loadFilesSync(path.join(__dirname, "../resolvers/**/*.js"))
+);
+
+// Configuración del servidor Apollo
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: ({ req }) => {
-    const token = req.headers.authorization || "";
-    const { userId } = getUserFromToken(token);
-    return { userId };
-  },
+  typeDefs: allSchemas,
+  resolvers:allResolvers
 });
 
-server.listen(5000).then(({ url }) => {
-  console.log(`🚀 Run server in the URL: ${url}`);
+// Conexión hacia la base de datos con Sequelize
+sequelize.authenticate().then(() => {
+  console.log('Connected to PostgreSQL..');
+  return startStandaloneServer(server, {
+    listen: { port: 4000 },
+    context: ({ req }) => {
+      const token = req.headers.authorization || "";
+      const { userId } = getUserFromToken(token);
+      return { userId };
+    },
+  });
+}).then(({ url }) => {
+  console.log(`🚀 Server ready at: ${url}`);
+}).catch((error) => {
+  console.error('Error connecting to the database:', error);
 });

@@ -1,7 +1,7 @@
-const DataTypes = require("sequelize");
-const sequelize = require("../config/cnn");
-const Pizza = require("./pizza");
-const Ingredient = require("./ingredient");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/cnn.js";
+import { Pizza } from "./pizza.js";
+import { Ingredient } from "./ingredient.js";
 
 const PizzaIngredient = sequelize.define(
   "PizzaIngredient",
@@ -43,4 +43,4 @@ Ingredient.belongsToMany(Pizza, {
   foreignKey: "ing_id",
 });
 
-module.exports = PizzaIngredient;
+export {PizzaIngredient};

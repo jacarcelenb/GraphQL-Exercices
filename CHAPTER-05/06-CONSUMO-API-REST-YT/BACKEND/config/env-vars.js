@@ -1,6 +1,10 @@
-require("dotenv/config");
+import * as dotenv from 'dotenv';
 
-module.exports = {
-  API_URL: process.env.API_URL,
+dotenv.config();
+
+const config = {
   API_TOKEN: process.env.API_TOKEN,
+  API_URL: process.env.API_URL
 };
+
+export { config };

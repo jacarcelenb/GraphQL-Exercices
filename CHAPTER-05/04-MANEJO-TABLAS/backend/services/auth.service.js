@@ -1,11 +1,11 @@
-const jwt = require("jsonwebtoken");
-const vars = require("../config/env-vars");
+import jwt from 'jsonwebtoken'
+import { config } from '../config/env-vars.js';
 
 const getUserFromToken = (token) => {
   if (token) {
-    return jwt.verify(token, vars.JWTSECRET);
+    return jwt.verify(token, config.JWTSECRET);
   }
   return "";
 };
 
-module.exports = {getUserFromToken}
+export {getUserFromToken}

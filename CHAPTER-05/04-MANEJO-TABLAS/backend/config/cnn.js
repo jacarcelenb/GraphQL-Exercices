@@ -1,13 +1,16 @@
-const Sequelize = require("sequelize") ;
-const vars = require( "./env-vars")
+import Sequelize from 'sequelize';
+import { config } from './env-vars.js';
 
 const sequelize = new Sequelize(
-  vars.DATABASE_NAME,
-  vars.USER,
-  vars.PASSWORD,
+  config.database,
+  config.user,
+  config.password,
   {
-    host: vars.HOST,
-    dialect: vars.DIALECT,
+    host: config.host,
+    dialect: config.dialect,
+    logging: false,  // Desactiva los logs
   }
 );
-module.exports = sequelize
+
+
+export { sequelize };

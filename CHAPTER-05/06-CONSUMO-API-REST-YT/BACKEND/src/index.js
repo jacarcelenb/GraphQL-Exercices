@@ -1,14 +1,33 @@
-const { ApolloServer } = require("apollo-server");
-const { fileLoader, mergeTypes } = require("merge-graphql-schemas");
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import path from "path";
+import { fileURLToPath } from "url";
+import { loadFilesSync } from "@graphql-tools/load-files";
+import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
 
-const typeDefs = mergeTypes(fileLoader("./type-system/schema.graphql"));
-const resolvers = require("../controllers/controller");
+// Obtener la ruta del directorio actual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Cargar y combinar los schemas
+const allSchemas = mergeTypeDefs(
+  loadFilesSync(path.join(__dirname, "../schema/**/*.graphql"))
+);
+
+// Cargar y combinar resolvers
+const allResolvers = mergeResolvers(
+  loadFilesSync(path.join(__dirname, "../resolvers/**/*.js"))
+);
+
+// Configuración del servidor Apollo
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: allSchemas,
+  resolvers: allResolvers,
 });
 
-server.listen(4000).then(({ url }) => {
-  console.log(`🚀 Run server in the URL: ${url}`);
+// Iniciar el servidor Apollo
+startStandaloneServer(server, {
+  listen: { port: 4000 },
+}).then((server) => {
+  console.log(`🚀  Server ready at: ${server.url}`);
 });

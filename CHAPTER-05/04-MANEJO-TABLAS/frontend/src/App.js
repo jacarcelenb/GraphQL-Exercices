@@ -9,7 +9,6 @@ import PrivateRoute from "./components/auth/privateroute";
 import RoleList from "./components/role/role-list";
 import RoleMenuList from "./components/access-menu/rolmenu-list";
 import Login from "./components/login";
-import Dashboard from "./components/dashboard/dashboard";
 import WelcomePage from "./components/shared/welcome-page";
 import NotFoundPage from "./components/notfound";
 function App() {
@@ -26,14 +25,6 @@ function App() {
     <Routes>
       <Route path="/" element={<MainPage></MainPage>}></Route>
       <Route path="login" element={<Login setAuth={setAuth}></Login>}></Route>
-      <Route
-        path="main"
-        element={
-          <PrivateRoute auth={auth}>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      ></Route>
       <Route
         path="welcome"
         element={

@@ -1,12 +1,14 @@
+import * as dotenv from 'dotenv';
 
-require("dotenv/config")
+dotenv.config();
 
-module.exports = {
-    DATABASE_NAME: process.env.DATABASE,
-    HOST: process.env.HOST,
-    PORT: process.env.PORT,
-    USER: process.env.USER,
-    PASSWORD: process.env.PASSWORD,
-    DIALECT: process.env.DIALECT
+const config = {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_DATABASE,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  dialect: process.env.DIALECT
+};
 
-   }
+export { config };

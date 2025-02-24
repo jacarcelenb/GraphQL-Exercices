@@ -12,8 +12,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import UserMenu from "./user-menu";
-import { formatUserFields } from "../../services/export-file-service";
-import ReportHeader from "../shared/report-header";
 import { GET_ROLES } from "../../services/role-service";
 const UserList = () => {
   const [user, setUser] = useState(null);
@@ -176,15 +174,6 @@ const UserList = () => {
           <DataTable
             value={userlist.data?.users}
             ref={dt}
-            header={
-              <ReportHeader
-                formatdata={formatUserFields(userlist.data?.users)}
-                data={userlist.data?.users}
-                dt={dt}
-                columns={["Nombre", "Correo", "Estado"]}
-                name={"Usuarios"}
-              ></ReportHeader>
-            }
             showGridlines
             stripedRows
             paginator
