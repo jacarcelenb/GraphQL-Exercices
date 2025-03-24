@@ -1,0 +1,29 @@
+{
+  "name": "01-orm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@apollo/server": "^4.11.2",
+    "@graphql-tools/graphql-file-loader": "^8.0.7",
+    "@graphql-tools/load": "^8.0.8",
+    "@graphql-tools/load-files": "^7.0.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.7",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.5"
+  }
+}

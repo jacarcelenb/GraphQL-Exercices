@@ -1,0 +1,38 @@
+type RoleMenu {
+  rm_id: Int!
+  rol_id: Int!
+  mn_id: Int!
+  rm_status: Boolean!
+  menus: [Menu]
+}
+
+ type Menu {
+    mn_id: Int!
+    mn_name: String!
+    mn_route: String!
+    mn_icon: String!
+  }
+
+input RoleMenuInput {
+  rol_id: Int!
+  mn_id: Int!
+  rm_status: Boolean!
+}
+
+
+input RoleMenuUpdateInput {
+  rm_id: Int!
+  rol_id: Int
+  mn_id: Int
+  rm_status: Boolean
+}
+
+type Query {
+  rolemenus(rol_id:Int): [RoleMenu]
+}
+
+type Mutation {
+  addRoleMenu(input: RoleMenuInput!): RoleMenu
+  updateRoleMenu(input: RoleMenuUpdateInput!): RoleMenu
+  deleteRoleMenu(rm_id: Int!): String
+}

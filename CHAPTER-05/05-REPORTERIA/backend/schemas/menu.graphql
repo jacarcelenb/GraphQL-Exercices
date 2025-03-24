@@ -1,0 +1,24 @@
+ type Menu {
+    mn_id: Int!
+    mn_name: String!
+    mn_route: String!
+    mn_icon: String!
+  }
+
+type Query {
+  menus(mn_id: Int): [Menu]
+}
+
+
+  input MenuInput {
+    mn_name: String!
+    mn_route: String!
+    mn_icon: String!
+  }
+
+  input MenuUpdateInput {
+    mn_name: String
+    mn_route: String
+    mn_icon: String
+  }
+

@@ -1,0 +1,52 @@
+type Video {
+  id: String
+  title: String
+  description: String
+  channelTitle: String
+  player: String
+}
+
+type Playlist {
+  id: String
+  title: String
+  description: String
+  channelTitle: String
+  player: String
+}
+
+type SearchBody {
+  id: String
+  title: String
+  description: String
+  thumbnail: Thumbnail
+}
+
+type SearchVideo {
+  id: String
+  title: String
+  description: String
+  thumbnail: Thumbnail
+  videos: [Video]
+}
+
+type Channel {
+  id: String
+  title: String
+  description: String
+  thumbnail: Thumbnail
+  playlists: [Playlist]
+}
+
+type Thumbnail {
+  url: String
+  width: Int
+  height: Int
+}
+
+type Query {
+  video(maxresults: Int): [Video]
+  SearchVideos(filter: String!): [SearchVideo]
+  SearchChannels(filter: String!): [Channel]
+  listVideo(id: String): [Video]
+  SearchPlaylists(filter: String!): [SearchBody]
+}

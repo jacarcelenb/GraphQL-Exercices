@@ -1,0 +1,42 @@
+type users {
+  usr_id: Int
+  usr_name: String!
+  usr_email: String!
+  usr_password: String!
+  usr_status: Boolean!
+  rol_id:Int
+  user_token: String
+}
+
+
+type Query {
+  users(usr_id:Int): [users]
+}
+
+
+type Mutation {
+  loginUser(usr_email: String!, usr_password: String!): users
+  createUser(user: addUser): users
+  updateUser(user: modifyUser): users
+  deleteUser(id: ID!): String
+}
+
+input addUser {
+  usr_name: String!
+  usr_email: String!
+  usr_password: String!
+  usr_status: Boolean!
+  rol_id: Int,
+  user_token: String
+
+}
+
+input modifyUser {
+  usr_id: Int!
+  usr_name: String
+  usr_email: String
+  usr_status: Boolean
+  rol_id: Int,
+  user_token: String
+
+}
